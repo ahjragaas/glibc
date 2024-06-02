@@ -212,6 +212,12 @@ struct link_map
     unsigned int l_find_object_processed:1; /* Zero if _dl_find_object_update
 					       needs to process this
 					       lt_library map.  */
+    enum			/* Memory sealing status.  */
+      {
+	lt_seal_dont,		/* Do not seal the object.  */
+	lt_seal_toseal,		/* The library is marked to be sealed.  */
+	lt_seal_sealed		/* The library is sealed.  */
+      } l_seal:2;
 
     /* NODELETE status of the map.  Only valid for maps of type
        lt_loaded.  Lazy binding sets l_nodelete_active directly,

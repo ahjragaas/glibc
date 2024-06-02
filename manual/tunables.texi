@@ -355,6 +355,41 @@ tests for @code{AT_SECURE} programs and not meant to be a security feature.
 The default value of this tunable is @samp{0}.
 @end deftp
 
+@deftp Tunable glibc.rtld.seal
+Sets whether to enable memory sealing during program execution.  The sealed
+memory prevents further changes to the maped memory region, such as shrinking
+or expanding, mapping another segment over a pre-existing region, or change
+the memory protection flags (check the @code{mseal} for more information).
+The sealing is done in multiple places where the memory is supposed to be
+immuatable over program execution:
+
+@itemize @bullet
+@item
+All shared library dependencies from the binary, including the read-only segments
+after @code{PT_GNU_RELRO} setup.
+
+@item
+The binary itself, including dynamic and static linked.  In both cases it is up
+either to binary or the loader to setup the sealing.
+
+@item
+The vDSO vma provided by the kernel (if existent).
+
+@item
+Any preload libraries.
+
+@item
+Any library loaded with @code{dlopen} with @code{RTLD_NODELETE} flag.
+@end itemize
+
+The tunable accepts three diferent values: @samp{0} where sealing is disabled,
+@samp{1} where sealing is enabled, and @samp{2} where sealing is enforced.  For
+the enforced mode, if the memory can not be sealed the process terminates the
+execution.
+
+The default value of this tunable is @samp{1}.
+@end deftp
+
 @node Elision Tunables
 @section Elision Tunables
 @cindex elision tunables

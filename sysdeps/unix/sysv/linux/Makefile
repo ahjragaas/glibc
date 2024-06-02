@@ -625,6 +625,10 @@ sysdep-rtld-routines += \
   dl-sbrk \
   # sysdep-rtld-routines
 
+dl-routines += \
+  dl-mseal \
+  # dl-routines
+
 others += \
   pldd \
   # others
@@ -634,6 +638,47 @@ install-bin += \
   # install-bin
 
 $(objpfx)pldd: $(objpfx)xmalloc.o
+
+tests-static += \
+  tst-dl_mseal-static \
+  # tests-static
+
+tests += \
+  $(tests-static) \
+  tst-dl_mseal \
+  # tests
+
+modules-names += \
+  lib-tst-dl_mseal-1 \
+  lib-tst-dl_mseal-2 \
+  lib-tst-dl_mseal-dlopen-1 \
+  lib-tst-dl_mseal-dlopen-1-1 \
+  lib-tst-dl_mseal-dlopen-2 \
+  lib-tst-dl_mseal-dlopen-2-1 \
+  lib-tst-dl_mseal-preload \
+  # modules-names
+
+$(objpfx)tst-dl_mseal.out: \
+  $(objpfx)lib-tst-dl_mseal-preload.so \
+  $(objpfx)lib-tst-dl_mseal-1.so \
+  $(objpfx)lib-tst-dl_mseal-2.so \
+  $(objpfx)lib-tst-dl_mseal-dlopen-1.so \
+  $(objpfx)lib-tst-dl_mseal-dlopen-1-1.so \
+  $(objpfx)lib-tst-dl_mseal-dlopen-2.so \
+  $(objpfx)lib-tst-dl_mseal-dlopen-2-1.so
+
+tst-dl_mseal-ARGS = -- $(host-test-program-cmd)
+$(objpfx)tst-dl_mseal: $(objpfx)lib-tst-dl_mseal-1.so
+LDFLAGS-tst-dl_mseal = -Wl,--no-as-needed
+$(objpfx)lib-tst-dl_mseal-1.so: $(objpfx)lib-tst-dl_mseal-2.so
+LDFLAGS-lib-tst-dl_mseal-1.so = -Wl,--no-as-needed
+
+$(objpfx)lib-tst-dl_mseal-dlopen-1.so: $(objpfx)lib-tst-dl_mseal-dlopen-1-1.so
+LDFLAGS-lib-tst-dl_mseal-dlopen-1.so = -Wl,--no-as-needed
+$(objpfx)lib-tst-dl_mseal-dlopen-2.so: $(objpfx)lib-tst-dl_mseal-dlopen-2-1.so
+LDFLAGS-lib-tst-dl_mseal-dlopen-2.so = -Wl,--no-as-needed
+
+tst-dl_mseal-static-ARGS = -- $(host-test-program-cmd)
 endif
 
 ifeq ($(subdir),rt)
