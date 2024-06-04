@@ -656,9 +656,11 @@ modules-names += \
   lib-tst-dl_mseal-dlopen-2 \
   lib-tst-dl_mseal-dlopen-2-1 \
   lib-tst-dl_mseal-preload \
+  tst-dl_mseal-auditmod \
   # modules-names
 
 $(objpfx)tst-dl_mseal.out: \
+  $(objpfx)tst-dl_mseal-auditmod.so \
   $(objpfx)lib-tst-dl_mseal-preload.so \
   $(objpfx)lib-tst-dl_mseal-1.so \
   $(objpfx)lib-tst-dl_mseal-2.so \

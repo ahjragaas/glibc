@@ -384,6 +384,9 @@ Any library loaded with @code{dlopen} with @code{RTLD_NODELETE} flag.
 @item
 Any runtime library used for process unwind (such as required by @code{backtrace}
 or @code{pthread_exit}).
+
+@item
+All audit modules and their dependencies.
 @end itemize
 
 The tunable accepts three diferent values: @samp{0} where sealing is disabled,

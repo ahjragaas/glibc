@@ -1044,6 +1044,10 @@ ERROR: audit interface '%s' requires version %d (maximum supported version %d); 
 
   /* Mark the DSO as being used for auditing.  */
   dlmargs.map->l_auditing = 1;
+
+  /* Seal the audit modules and their dependencies.  */
+  dlmargs.map->l_seal = lt_seal_toseal;
+  _dl_mseal_map (dlmargs.map, true);
 }
 
 /* Load all audit modules.  */

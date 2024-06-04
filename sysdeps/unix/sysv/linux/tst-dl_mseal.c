@@ -35,6 +35,7 @@
 #include <support/xthread.h>
 
 #define LIB_PRELOAD              "lib-tst-dl_mseal-preload.so"
+#define LIB_AUDIT                "tst-dl_mseal-auditmod.so"
 
 #define LIB_NEEDED_1             "lib-tst-dl_mseal-1.so"
 #define LIB_NEEDED_2             "lib-tst-dl_mseal-2.so"
@@ -68,6 +69,7 @@ static const char *expected_sealed_libs[] =
   "ld.so",
   "tst-dl_mseal",
   LIB_PRELOAD,
+  LIB_AUDIT,
   LIB_NEEDED_1,
   LIB_NEEDED_2,
   LIB_DLOPEN_NODELETE,
@@ -247,11 +249,12 @@ do_test (int argc, char *argv[])
   spargv[i++] = (char *) "--restart";
   spargv[i] = NULL;
 
-  char *envvarss[3];
+  char *envvarss[4];
   envvarss[0] = (char *) "GLIBC_TUNABLES=glibc.rtld.seal=2";
 #ifndef TEST_STATIC
   envvarss[1] = (char *) "LD_PRELOAD=" LIB_PRELOAD;
-  envvarss[2] = NULL;
+  envvarss[2] = (char *) "LD_AUDIT=" LIB_AUDIT,
+  envvarss[3] = NULL;
 #else
   envvarss[1] = NULL;
 #endif
