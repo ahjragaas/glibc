@@ -48,7 +48,7 @@ __libc_unwind_link_get (void)
   /* Initialize a copy of the data, so that we do not need about
      unlocking in case the dynamic loader somehow triggers
      unwinding.  */
-  void *local_libgcc_handle = __libc_dlopen (LIBGCC_S_SO);
+  void *local_libgcc_handle = __libc_dlopen_nodelete (LIBGCC_S_SO);
   if (local_libgcc_handle == NULL)
     {
       __libc_lock_unlock (lock);
@@ -100,7 +100,8 @@ __libc_unwind_link_get (void)
 
   __libc_lock_lock (lock);
   if (atomic_load_relaxed (&global_libgcc_handle) != NULL)
-    /* This thread lost the race.  Clean up.  */
+    /* This thread lost the race.  Drop the l_direct_opencount and issue
+       the debug log.  */
     __libc_dlclose (local_libgcc_handle);
   else
     {

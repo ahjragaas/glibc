@@ -19,6 +19,7 @@
 #include <array_length.h>
 #include <errno.h>
 #include <getopt.h>
+#include <gnu/lib-names.h>
 #include <inttypes.h>
 #include <libgen.h>
 #include <stdio.h>
@@ -31,6 +32,7 @@
 #include <support/support.h>
 #include <support/xdlfcn.h>
 #include <support/xstdio.h>
+#include <support/xthread.h>
 
 #define LIB_PRELOAD              "lib-tst-dl_mseal-preload.so"
 
@@ -70,6 +72,7 @@ static const char *expected_sealed_libs[] =
   LIB_NEEDED_2,
   LIB_DLOPEN_NODELETE,
   LIB_DLOPEN_NODELETE_DEP,
+  LIBGCC_S_SO,
 #endif
   "[vdso]",
 };
@@ -100,6 +103,13 @@ is_in_string_list (const char *s, const char *const list[], size_t len)
   return -1;
 }
 
+static void *
+tf (void *closure)
+{
+  pthread_exit (NULL);
+  return NULL;
+}
+
 static int
 handle_restart (void)
 {
@@ -107,6 +117,9 @@ handle_restart (void)
   xdlopen (LIB_DLOPEN_NODELETE, RTLD_NOW | RTLD_NODELETE);
   xdlopen (LIB_DLOPEN_DEFAULT, RTLD_NOW);
 #endif
+
+  /* pthread_exit will load LIBGCC_S_SO.  */
+  xpthread_join (xpthread_create (NULL, tf, NULL));
 
   FILE *fp = xfopen ("/proc/self/maps", "r");
   char *line = NULL;
