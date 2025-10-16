@@ -368,10 +368,13 @@ ahosts_keys_int (int af, int xflags, int number, char *key[])
 
       if (gai_result != 0)
 	{
-	  result = 2;
 	  if (gai_verbose)
 	    fprintf (stderr, _("Host %s failed: %s\n"), key[i],
 			    gai_strerror (gai_result));
+	  if (gai_result >= EAI_INPROGRESS && gai_result != EAI_NONAME)
+	    result = 10 + abs (gai_result);
+	  else
+	    result = 2;
 	}
       else
 	{
