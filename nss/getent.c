@@ -58,6 +58,7 @@ static const struct argp_option args_options[] =
   {
     { "service", 's', N_("CONFIG"), 0, N_("Service configuration to be used") },
     { "no-idn", 'i', NULL, 0, N_("disable IDN encoding") },
+    { "verbose", 'v', NULL, 0, N_("print getaddrinfo error details") },
     { "no-addrconfig", 'A', NULL, 0,
       N_("do not filter out unsupported IPv4/IPv6 addresses (with ahosts*)") },
     { NULL, 0, NULL, 0, NULL },
@@ -83,6 +84,9 @@ static int idn_flags = AI_IDN | AI_CANONIDN;
 
 /* Set to 0 by --no-addrconfig.  */
 static int addrconfig_flags = AI_ADDRCONFIG;
+
+/* Set to 1 by -v. */
+static bool gai_verbose = false;
 
 /* Print the version information.  */
 static void
@@ -358,9 +362,17 @@ ahosts_keys_int (int af, int xflags, int number, char *key[])
   for (i = 0; i < number; ++i)
     {
       struct addrinfo *res;
+      int gai_result;
 
-      if (getaddrinfo (key[i], NULL, &hint, &res) != 0)
-	result = 2;
+      gai_result = getaddrinfo (key[i], NULL, &hint, &res);
+
+      if (gai_result != 0)
+	{
+	  result = 2;
+	  if (gai_verbose)
+	    fprintf (stderr, _("Host %s failed: %s\n"), key[i],
+			    gai_strerror (gai_result));
+	}
       else
 	{
 	  struct addrinfo *runp = res;
@@ -908,6 +920,10 @@ parse_option (int key, char *arg, struct argp_state *state)
 
     case 'i':
       idn_flags = 0;
+      break;
+
+    case 'v':
+      gai_verbose = true;
       break;
 
     case 'A':
