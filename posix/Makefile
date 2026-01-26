@@ -178,7 +178,7 @@ tests-special += $(objpfx)bug-regex2-mem.out $(objpfx)bug-regex14-mem.out \
 		 $(objpfx)bug-glob2-mem.out $(objpfx)tst-vfork3-mem.out \
 		 $(objpfx)tst-fnmatch-mem.out $(objpfx)bug-regex36-mem.out \
 		 $(objpfx)tst-glob-tilde-mem.out $(objpfx)bug-ga2-mem.out \
-		 $(objpfx)tst-wordexp-reuse.out
+		 $(objpfx)tst-wordexp-reuse-mem.out
 endif
 
 include ../Rules
