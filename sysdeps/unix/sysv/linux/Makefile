@@ -119,6 +119,7 @@ CFLAGS-tst-writev.c += "-DARTIFICIAL_LIMIT=(0x80000000-sysconf(_SC_PAGESIZE))"
 
 sysdep_headers += \
   bits/a.out.h \
+  bits/cloexec.h \
   bits/epoll.h \
   bits/eventfd.h \
   bits/inotify.h \
