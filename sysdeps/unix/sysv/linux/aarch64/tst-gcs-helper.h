@@ -26,6 +26,11 @@
 #include <stdio.h>
 #include <sys/auxv.h>
 
+#ifndef PR_SET_SHADOW_STACK_STATUS
+# define PR_GET_SHADOW_STACK_STATUS 74
+# define PR_SET_SHADOW_STACK_STATUS 75
+#endif
+
 static bool
 __check_gcs_status (void)
 {
