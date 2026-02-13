@@ -28,5 +28,6 @@
 #define STAT __stat64
 #define LSTAT __lstat64
 #define FSTAT __fstat64
+#define FTS_INTERNAL_ALIAS
 
 #include "fts.c"

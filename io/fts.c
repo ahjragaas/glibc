@@ -74,11 +74,11 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 
 /* Support for the LFS API version.  */
 #ifndef FTS_OPEN
-#define FTS_OPEN fts_open
-#define FTS_CLOSE fts_close
-#define FTS_READ fts_read
-#define FTS_SET fts_set
-#define FTS_CHILDREN fts_children
+# define FTS_OPEN fts_open
+# define FTS_CLOSE fts_close
+# define FTS_READ fts_read
+# define FTS_SET fts_set
+# define FTS_CHILDREN fts_children
 # define FTSOBJ FTS
 # define FTSENTRY FTSENT
 # define INO_T ino_t
@@ -86,6 +86,20 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 # define STAT __stat
 # define LSTAT __lstat
 # define FSTAT __fstat
+# define FTS_INTERNAL_ALIAS
+#endif
+
+#ifdef FTS_INTERNAL_ALIAS
+# define _CONCAT(__x, __y)          __CONCAT (__x, __y)
+# define FTS_INTERNAL_FUNC(__name)  _CONCAT (__, __name)
+# define FTS_INTERNAL(__name)       FTS_INTERNAL_FUNC (__name)
+# define FTS_HIDDEN_DEF(__name) \
+  weak_alias (FTS_INTERNAL_FUNC (__name), __name); \
+  libc_hidden_def (FTS_INTERNAL_FUNC (__name));
+#else
+# define FTS_INTERNAL(__name)     __name
+# define FTS_HIDDEN_DEF(__name) \
+  libc_hidden_def (__name);
 #endif
 
 static FTSENTRY	*fts_alloc (FTSOBJ *, const char *, size_t);
@@ -119,8 +133,8 @@ static int      fts_safe_changedir (FTSOBJ *, FTSENTRY *, int, const char *);
 #define	BREAD		3		/* fts_read */
 
 FTSOBJ *
-FTS_OPEN (char * const *argv, int options,
-	  int (*compar) (const FTSENTRY **, const FTSENTRY **))
+FTS_INTERNAL(FTS_OPEN) (char * const *argv, int options,
+			int (*compar) (const FTSENTRY **, const FTSENTRY **))
 {
 	FTSOBJ *sp;
 	FTSENTRY *p, *root;
@@ -231,6 +245,7 @@ mem2:	free(sp->fts_path);
 mem1:	free(sp);
 	return (NULL);
 }
+FTS_HIDDEN_DEF (FTS_OPEN);
 
 static void
 fts_load (FTSOBJ *sp, FTSENTRY *p)
@@ -257,7 +272,7 @@ fts_load (FTSOBJ *sp, FTSENTRY *p)
 }
 
 int
-FTS_CLOSE (FTSOBJ *sp)
+FTS_INTERNAL (FTS_CLOSE) (FTSOBJ *sp)
 {
 	FTSENTRY *freep, *p;
 	int saved_errno;
@@ -300,6 +315,7 @@ FTS_CLOSE (FTSOBJ *sp)
 	free(sp);
 	return (0);
 }
+FTS_HIDDEN_DEF (FTS_CLOSE)
 
 /*
  * Special case of "/" at the end of the path so that slashes aren't
@@ -310,7 +326,7 @@ FTS_CLOSE (FTSOBJ *sp)
 	    ? p->fts_pathlen - 1 : p->fts_pathlen)
 
 FTSENTRY *
-FTS_READ (FTSOBJ *sp)
+FTS_INTERNAL (FTS_READ) (FTSOBJ *sp)
 {
 	FTSENTRY *p, *tmp;
 	int instr;
@@ -497,6 +513,7 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 	p->fts_info = p->fts_errno ? FTS_ERR : FTS_DP;
 	return p;
 }
+FTS_HIDDEN_DEF (FTS_READ)
 
 /*
  * Fts_set takes the stream as an argument although it's not used in this
@@ -506,7 +523,7 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
  */
 /* ARGSUSED */
 int
-FTS_SET (FTSOBJ *sp, FTSENTRY *p, int instr)
+FTS_INTERNAL (FTS_SET) (FTSOBJ *sp, FTSENTRY *p, int instr)
 {
 	if (instr != 0 && instr != FTS_AGAIN && instr != FTS_FOLLOW &&
 	    instr != FTS_NOINSTR && instr != FTS_SKIP) {
@@ -516,9 +533,10 @@ FTS_SET (FTSOBJ *sp, FTSENTRY *p, int instr)
 	p->fts_instr = instr;
 	return (0);
 }
+FTS_HIDDEN_DEF (FTS_SET)
 
 FTSENTRY *
-FTS_CHILDREN(FTSOBJ *sp, int instr)
+FTS_INTERNAL(FTS_CHILDREN)(FTSOBJ *sp, int instr)
 {
 	FTSENTRY *p;
 	int fd;
@@ -582,6 +600,7 @@ FTS_CHILDREN(FTSOBJ *sp, int instr)
 	(void)__close(fd);
 	return (sp->fts_child);
 }
+FTS_HIDDEN_DEF (FTS_CHILDREN)
 
 static inline int
 dirent_not_directory(const struct dirent *dp)

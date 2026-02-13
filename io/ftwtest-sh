@@ -62,6 +62,8 @@ ln -s $tmpdir/foo/lvl1/lvl2 $tmpdir/foo/lvl1/lvl2/link@2
 ln -s $tmpdir/foo/lvl1/lvl2/lvl3/lvl4 $tmpdir/foo/lvl1/link@1
 echo > $tmpdir/bar/xo
 chmod a-x,a+r $tmpdir/bar
+mkdir $tmpdir/ndir
+chmod a-r $tmpdir/ndir
 
 testout=$(mktemp $tmp/ftwtest-tmp-XXXXXX.out)
 
@@ -73,6 +75,7 @@ base = "$tmp/", file = "$ftwtest", flag = FTW_D, level = 0
 base = "$tmp/$ftwtest/", file = "bar", flag = FTW_D, level = 1
 base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, level = 1
 base = "$tmp/$ftwtest/", file = "foo", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/", file = "ndir", flag = FTW_DNR, level = 1
 base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_NS, level = 2
 base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_D, level = 2
 base = "$tmp/$ftwtest/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
@@ -92,6 +95,7 @@ base = "$tmp/", file = "$ftwtest", flag = FTW_DP, level = 0
 base = "$tmp/$ftwtest/", file = "bar", flag = FTW_DP, level = 1
 base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, level = 1
 base = "$tmp/$ftwtest/", file = "foo", flag = FTW_DP, level = 1
+base = "$tmp/$ftwtest/", file = "ndir", flag = FTW_DNR, level = 1
 base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_NS, level = 2
 base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_DP, level = 2
 base = "$tmp/$ftwtest/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
@@ -111,6 +115,7 @@ base = "$tmp/", file = "$ftwtest", flag = FTW_D, level = 0
 base = "$tmp/$ftwtest/", file = "bar", flag = FTW_D, level = 1
 base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, level = 1
 base = "$tmp/$ftwtest/", file = "foo", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/", file = "ndir", flag = FTW_DNR, level = 1
 base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_NS, level = 2
 base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_D, level = 2
 base = "$tmp/$ftwtest/foo/lvl1/", file = "file@1", flag = FTW_F, level = 3
@@ -125,7 +130,9 @@ EOF
 rm $testout
 
 # For the next test everything must be readable.
+chmod a+r $tmpdir/ndir
 chmod -fR a+x $tmpdir
+chmod a-r $tmpdir/ndir
 
 $testprogram --chdir $tmpdir |
     sort > $testout
@@ -138,6 +145,7 @@ base = "$tmp/", file = "$ftwtest", flag = FTW_D, cwd = $tmpreal, level = 0
 base = "$tmp/$ftwtest/", file = "bar", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 1
 base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, cwd = $tmpreal/$ftwtest, level = 1
 base = "$tmp/$ftwtest/", file = "foo", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 1
+base = "$tmp/$ftwtest/", file = "ndir", flag = FTW_DNR, cwd = $tmpreal/$ftwtest, level = 1
 base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_F, cwd = $tmpreal/$ftwtest/bar, level = 2
 base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_D, cwd = $tmpreal/$ftwtest/foo, level = 2
 base = "$tmp/$ftwtest/foo/lvl1/", file = "file@1", flag = FTW_F, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 3
@@ -160,6 +168,7 @@ base = "", file = "$ftwtest", flag = FTW_D, cwd = $tmpreal, level = 0
 base = "$ftwtest/", file = "bar", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 1
 base = "$ftwtest/", file = "baz", flag = FTW_F, cwd = $tmpreal/$ftwtest, level = 1
 base = "$ftwtest/", file = "foo", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 1
+base = "$ftwtest/", file = "ndir", flag = FTW_DNR, cwd = $tmpreal/$ftwtest, level = 1
 base = "$ftwtest/bar/", file = "xo", flag = FTW_F, cwd = $tmpreal/$ftwtest/bar, level = 2
 base = "$ftwtest/foo/", file = "lvl1", flag = FTW_D, cwd = $tmpreal/$ftwtest/foo, level = 2
 base = "$ftwtest/foo/lvl1/", file = "file@1", flag = FTW_F, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 3
@@ -182,6 +191,7 @@ base = "$ftwtest/", file = ".", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 0
 base = "$ftwtest/./", file = "bar", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 1
 base = "$ftwtest/./", file = "baz", flag = FTW_F, cwd = $tmpreal/$ftwtest, level = 1
 base = "$ftwtest/./", file = "foo", flag = FTW_D, cwd = $tmpreal/$ftwtest, level = 1
+base = "$ftwtest/./", file = "ndir", flag = FTW_DNR, cwd = $tmpreal/$ftwtest, level = 1
 base = "$ftwtest/./bar/", file = "xo", flag = FTW_F, cwd = $tmpreal/$ftwtest/bar, level = 2
 base = "$ftwtest/./foo/", file = "lvl1", flag = FTW_D, cwd = $tmpreal/$ftwtest/foo, level = 2
 base = "$ftwtest/./foo/lvl1/", file = "file@1", flag = FTW_F, cwd = $tmpreal/$ftwtest/foo/lvl1, level = 3
@@ -226,6 +236,7 @@ base = "$tmp/", file = "$ftwtest", flag = FTW_D, level = 0
 base = "$tmp/$ftwtest/", file = "bar", flag = FTW_D, level = 1
 base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, level = 1
 base = "$tmp/$ftwtest/", file = "foo", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/", file = "ndir", flag = FTW_DNR, level = 1
 base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_F, level = 2
 base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_D, level = 2
 base = "$tmp/$ftwtest/foo/", file = "lvl1b", flag = FTW_D, level = 2
@@ -250,6 +261,7 @@ base = "$tmp/", file = "$ftwtest", flag = FTW_D, level = 0
 base = "$tmp/$ftwtest/", file = "bar", flag = FTW_D, level = 1
 base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, level = 1
 base = "$tmp/$ftwtest/", file = "foo", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/", file = "ndir", flag = FTW_DNR, level = 1
 base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_F, level = 2
 base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_D, level = 2
 base = "$tmp/$ftwtest/foo/", file = "lvl1b", flag = FTW_D, level = 2
@@ -275,6 +287,7 @@ base = "$tmp/", file = "$ftwtest", flag = FTW_D, level = 0
 base = "$tmp/$ftwtest/", file = "bar", flag = FTW_D, level = 1
 base = "$tmp/$ftwtest/", file = "baz", flag = FTW_F, level = 1
 base = "$tmp/$ftwtest/", file = "foo", flag = FTW_D, level = 1
+base = "$tmp/$ftwtest/", file = "ndir", flag = FTW_DNR, level = 1
 base = "$tmp/$ftwtest/bar/", file = "xo", flag = FTW_F, level = 2
 base = "$tmp/$ftwtest/foo/", file = "lvl1", flag = FTW_D, level = 2
 base = "$tmp/$ftwtest/foo/", file = "lvl1b", flag = FTW_D, level = 2

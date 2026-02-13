@@ -22,10 +22,14 @@
 #define NFTW_NEW_NAME __new_nftw64
 #define INO_T ino64_t
 #define STRUCT_STAT stat64
-#define LSTAT __lstat64
-#define STAT __stat64
-#define FSTATAT __fstatat64
 #define FTW_FUNC_T __ftw64_func_t
 #define NFTW_FUNC_T __nftw64_func_t
+
+#define FTS_TYPE FTS64
+#define FTSENT_TYPE FTSENT64
+#define FTS_OPEN __fts64_open
+#define FTS_READ __fts64_read
+#define FTS_SET __fts64_set
+#define FTS_CLOSE __fts64_close
 
 #include "ftw.c"

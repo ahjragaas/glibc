@@ -23,11 +23,15 @@
 # define NFTW_NAME      __nftw64_time64
 # define INO_T          ino64_t
 # define STRUCT_STAT    __stat64_t64
-# define LSTAT          __lstat64_time64
-# define STAT           __stat64_time64
-# define FSTATAT        __fstatat64_time64
 # define FTW_FUNC_T     __ftw64_time64_func_t
 # define NFTW_FUNC_T    __nftw64_time64_func_t
+
+# define FTS_TYPE       FTS64_TIME64
+# define FTSENT_TYPE    FSTENT64_TIME64
+# define FTS_OPEN       __fts64_open_time64
+# define FTS_READ       __fts64_read_time64
+# define FTS_SET        __fts64_set_time64
+# define FTS_CLOSE      __fts64_close_time64
 
 # include "ftw.c"
 #endif

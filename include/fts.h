@@ -47,6 +47,56 @@ typedef struct _ftsent64_time64
 } FSTENT64_TIME64;
 
 # endif
+
+__typeof (fts_open) __fts_open;
+libc_hidden_proto (__fts_open);
+__typeof (fts64_open) __fts64_open;
+libc_hidden_proto (__fts64_open);
+__typeof (fts64_open) __fts64_open;
+libc_hidden_proto (__fts64_open);
+#if __TIMESIZE != 64
+extern FTS64_TIME64* __fts64_open_time64 (char *const*, int,
+					  int (*)(const FSTENT64_TIME64 **,
+						  const FSTENT64_TIME64 **));
+libc_hidden_proto (__fts64_open_time64)
+#endif
+
+__typeof (fts_close) __fts_close;
+libc_hidden_proto (__fts_close);
+__typeof (fts64_close) __fts64_close;
+libc_hidden_proto (__fts64_close);
+#if __TIMESIZE != 64
+extern int __fts64_close_time64 (FTS64_TIME64 *);
+libc_hidden_proto (__fts64_close_time64)
+#endif
+
+__typeof (fts_read) __fts_read;
+libc_hidden_proto (__fts_read);
+__typeof (fts64_read) __fts64_read;
+libc_hidden_proto (__fts64_read);
+#if __TIMESIZE != 64
+extern FSTENT64_TIME64* __fts64_read_time64 (FTS64_TIME64 *);
+libc_hidden_proto (__fts64_read_time64)
+#endif
+
+__typeof (fts_set) __fts_set;
+libc_hidden_proto (__fts_set);
+__typeof (fts64_set) __fts64_set;
+libc_hidden_proto (__fts64_set);
+#if __TIMESIZE != 64
+extern int __fts64_set_time64 (FTS64_TIME64 *, FSTENT64_TIME64 *, int);
+libc_hidden_proto (__fts64_set_time64)
+#endif
+
+__typeof (fts_children) __fts_children;
+libc_hidden_proto (__fts_children);
+__typeof (fts64_children) __fts64_children;
+libc_hidden_proto (__fts64_children);
+#if __TIMESIZE != 64
+extern FSTENT64_TIME64* __fts64_children_time64 (FTS64_TIME64 *, int);
+libc_hidden_proto (__fts64_children_time64)
+#endif
+
 #endif
 
 #endif /* _FTS_H  */
