@@ -157,6 +157,9 @@ __execvpe_common (const char *file, char *const argv[], char *const envp[],
 	  /* Those errors indicate the file is missing or not executable
 	     by us, in which case we want to just try the next path
 	     directory.  */
+	  case ENAMETOOLONG:
+	  /* We've already verified that the FILE length is < NAME_MAX,
+	     so this implies a path component is too long, so skip it.  */
 	  case ENODEV:
 	  case ETIMEDOUT:
 	  /* Some strange filesystems like AFS return even

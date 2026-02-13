@@ -277,6 +277,7 @@ tests := \
   tst-execvpe4 \
   tst-execvpe5 \
   tst-execvpe6 \
+  tst-execvpe7 \
   tst-fexecve \
   tst-fnmatch \
   tst-fnmatch2 \
