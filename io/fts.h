@@ -52,7 +52,29 @@
 
 #include <features.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <stdbool.h>
 
+enum { I_RING_SIZE = 4 };
+
+/* When ir_empty is true, the ring is empty.
+   Otherwise, ir_data[B..F] are defined, where B..F is the contiguous
+   range of indices, modulo I_RING_SIZE, from back to front, inclusive.
+   Undefined elements of ir_data are always set to ir_default_val.
+   Popping from an empty ring aborts.
+   Pushing onto a full ring returns the displaced value.
+   An empty ring has F==B and ir_empty == true.
+   A ring with one entry still has F==B, but now ir_empty == false.  */
+struct I_ring
+{
+  int ir_data[I_RING_SIZE];
+  int ir_default_val;
+  unsigned int ir_front;
+  unsigned int ir_back;
+  bool ir_empty;
+};
+typedef struct I_ring I_ring;
 
 typedef struct {
 	struct _ftsent *fts_cur;	/* current node */
@@ -73,11 +95,55 @@ typedef struct {
 #define	FTS_SEEDOT	0x0020		/* return dot and dot-dot */
 #define	FTS_XDEV	0x0040		/* don't cross devices */
 #define FTS_WHITEOUT	0x0080		/* return whiteout information */
-#define	FTS_OPTIONMASK	0x00ff		/* valid user option mask */
+#define FTS_TIGHT_CYCLE_CHECK	0x0100
+#define FTS_CWDFD               0x0200
+#define FTS_DEFER_STAT          0x0400
+#define FTS_VERBATIM    0x0800
+#define FTS_MOUNT       0x1000          /* skip other devices */
+#define FTS_OPTIONMASK  0x1fff          /* valid user option mask */
 
 #define	FTS_NAMEONLY	0x0100		/* (private) child names only */
 #define	FTS_STOP	0x0200		/* (private) unrecoverable error */
 	int fts_options;		/* fts_open options, global flags */
+
+	int fts_cwd_fd;                 /* the file descriptor on which the
+	                                   virtual cwd is open, or AT_FDCWD */
+
+	/* Map a directory's device number to a boolean.  The boolean is
+	   true if for that file system (type determined by a single fstatfs
+	   call per FS) st_nlink can be used to calculate the number of
+	   sub-directory entries in a directory.
+	   Using this table is an optimization that permits us to look up
+	   file system type on a per-inode basis at the minimal cost of
+	   calling fstatfs only once per traversed device.  */
+	struct hash_table *fts_leaf_optimization_works_ht;
+
+	union {
+	        /* This data structure is used if FTS_TIGHT_CYCLE_CHECK is
+	           specified.  It records the directories between a starting
+	           point and the current directory.  I.e., a directory is
+	           recorded here IFF we have visited it once, but we have not
+	           yet completed processing of all its entries.  Every time we
+	           visit a new directory, we add that directory to this set.
+	           When we finish with a directory (usually by visiting it a
+	           second time), we remove it from this set.  Each entry in
+	           this data structure is a device/inode pair.  This data
+	           structure is used to detect directory cycles efficiently and
+	           promptly even when the depth of a hierarchy is in the tens
+	           of thousands.  */
+	        struct hash_table *ht;
+
+	        /* FIXME: rename these two members to have the fts_ prefix */
+	        /* This data structure uses a lazy cycle-detection algorithm,
+	           as done by rm via cycle-check.c.  It's the default,
+	           but it's not appropriate for programs like du.  */
+	        struct cycle_check_state *state;
+	} fts_cycle;
+
+	/* A stack of the file descriptors corresponding to the
+	   most-recently traversed parent directories.
+	   Currently used only in FTS_CWDFD mode.  */
+	I_ring fts_fd_ring;
 } FTS;
 
 #ifdef __USE_LARGEFILE64
@@ -92,6 +158,13 @@ typedef struct {
 	int fts_nitems;			/* elements in the sort array */
 	int (*fts_compar) (const void *, const void *); /* compare fn */
 	int fts_options;		/* fts_open options, global flags */
+	int fts_cwd_fd;
+	struct hash_table *fts_leaf_optimization_works_ht;
+	union {
+	        struct hash_table *ht;
+	        struct cycle_check_state *state;
+	} fts_cycle;
+	I_ring fts_fd_ring;
 } FTS64;
 #endif
 

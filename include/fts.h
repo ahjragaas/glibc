@@ -17,6 +17,13 @@ typedef struct
   int fts_nitems;
   int (*fts_compar) (const void *, const void *);
   int fts_options;
+  int fts_cwd_fd;
+  struct hash_table *fts_leaf_optimization_works_ht;
+  union {
+	  struct hash_table *ht;
+	  struct cycle_check_state *state;
+  } fts_cycle;
+  I_ring fts_fd_ring;
 } FTS64_TIME64;
 
 typedef struct _ftsent64_time64

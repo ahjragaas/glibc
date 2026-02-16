@@ -23,7 +23,8 @@ __scandirat (int dfd, const char *dir, struct dirent ***namelist,
 	     int (*select) (const struct dirent *),
 	     int (*cmp) (const struct dirent **, const struct dirent **))
 {
-  return __scandir_tail (__opendirat (dfd, dir), namelist, select, cmp);
+  return __scandir_tail (__opendirat (dfd, dir, 0, NULL), namelist, select,
+			 cmp);
 }
 weak_alias (__scandirat, scandirat)
 #endif

@@ -16,18 +16,19 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#define FTS_OPEN fts64_open
-#define FTS_CLOSE fts64_close
-#define FTS_READ fts64_read
-#define FTS_SET fts64_set
-#define FTS_CHILDREN fts64_children
-#define FTSOBJ FTS64
-#define FTSENTRY FTSENT64
-#define INO_T ino64_t
-#define STRUCT_STAT stat64
-#define STAT __stat64
-#define LSTAT __lstat64
-#define FSTAT __fstat64
+#define FTS_OPEN            fts64_open
+#define FTS_CLOSE           fts64_close
+#define FTS_READ            fts64_read
+#define FTS_SET             fts64_set
+#define FTS_CHILDREN        fts64_children
+#define FTSOBJ              FTS64
+#define INO_T               __ino64_t
+#define FTSENTRY            FTSENT64
+#define STRUCT_STAT         stat64
+#define FSTAT               __fstat64
+#define FSTATAT             __fstatat64
+#define STRUCT_STATFS       statfs64
+#define FSTATFS             __fstatfs64
 #define FTS_INTERNAL_ALIAS
 
 #include "fts.c"

@@ -36,8 +36,24 @@ gnulib:
   # Merged from gnulib 2025-10-29 (gnulib commit 1790ef25d8)
   include/intprops.h
   include/intprops-internal.h
+  # Merged from gnulib 2026-02-16
+  include/assure.h
+  include/bitrotate.h
+  include/flexmember.h
+  include/xalloc-oversized.h
   # Merged from gnulib 2021-09-21
   include/regex.h
+  # Merged from gnulib 2026-02-16
+  io/cycle-check.c
+  io/cycle-check.h
+  io/dev-ino.h
+  io/fts-cycle.c
+  io/fts.c
+  io/hash.c
+  io/hash.h
+  io/next-prime.c
+  io/next-prime.h
+  io/same-inode.h
   locale/programs/3level.h
   # Merged from gnulib 2014-6-23
   malloc/obstack.c

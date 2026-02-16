@@ -16,7 +16,8 @@ struct scandir_cancel_struct
 
 /* Now define the internal interfaces.  */
 extern DIR *__opendir (const char *__name) attribute_hidden;
-extern DIR *__opendirat (int dfd, const char *__name) attribute_hidden;
+extern DIR *__opendirat (int dfd, const char *__nam, int extra_flags,
+			 int *pnew_fd) attribute_hidden;
 extern DIR *__fdopendir (int __fd) attribute_hidden;
 extern int __closedir (DIR *__dirp) attribute_hidden;
 extern struct dirent *__readdir (DIR *__dirp) attribute_hidden;

@@ -66,12 +66,24 @@ opendir_tail (int fd)
 
 #if IS_IN (libc)
 DIR *
-__opendirat (int dfd, const char *name)
+__opendirat (int dfd, const char *name, int extra_flags, int *pnew_fd)
 {
   if (__glibc_unlikely (invalid_name (name)))
     return NULL;
 
-  return opendir_tail (__openat_nocancel (dfd, name, opendir_oflags));
+  int open_oflags = opendir_oflags | extra_flags;
+  int new_fd = __openat_nocancel (dfd, name, open_oflags);
+  if (new_fd < 0)
+    return NULL;
+  DIR *dirp = opendir_tail (new_fd);
+  if (dirp == NULL)
+    {
+      __close_nocancel_nostatus (new_fd);
+      return NULL;
+    }
+  else if (pnew_fd != NULL)
+    *pnew_fd = new_fd;
+  return dirp;
 }
 #endif
 

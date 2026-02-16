@@ -91,6 +91,7 @@ routines := \
   getcwd \
   getdirname \
   getwd \
+  hash \
   lchmod \
   lchown \
   link \
@@ -107,6 +108,7 @@ routines := \
   mkfifoat \
   mknod \
   mknodat \
+  next-prime \
   open \
   open64 \
   open64_2 \
