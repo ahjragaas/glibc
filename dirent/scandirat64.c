@@ -24,7 +24,8 @@ scandirat64 (int dfd, const char *dir, struct dirent64 ***namelist,
 	     int (*select) (const struct dirent64 *),
 	     int (*cmp) (const struct dirent64 **, const struct dirent64 **))
 {
-  return __scandir64_tail (__opendirat (dfd, dir), namelist, select, cmp);
+  return __scandir64_tail (__opendirat (dfd, dir, 0, NULL), namelist, select,
+			   cmp);
 }
 
 #if _DIRENT_MATCHES_DIRENT64

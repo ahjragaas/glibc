@@ -121,6 +121,7 @@ routines := \
   getusershell \
   getxattr \
   gtty \
+  hash \
   hsearch \
   hsearch_r \
   ifunc-impl-list \
@@ -157,6 +158,7 @@ routines := \
   munlock \
   munlockall \
   munmap \
+  next-prime \
   preadv \
   preadv2 \
   preadv64 \

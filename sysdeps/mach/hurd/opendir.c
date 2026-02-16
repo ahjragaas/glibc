@@ -66,14 +66,15 @@ _hurd_fd_opendir (struct hurd_fd *d)
 
 
 DIR *
-__opendirat (int dfd, const char *name)
+__opendirat (int dfd, const char *name, int extra_flags, int *pnew_fd)
 {
   if (name[0] == '\0')
     /* POSIX.1-1990 says an empty name gets ENOENT;
        but `open' might like it fine.  */
     return __hurd_fail (ENOENT), NULL;
 
-  int flags = O_RDONLY | O_NONBLOCK | O_DIRECTORY | O_CLOEXEC;
+  int flags = O_RDONLY | O_NONBLOCK | O_DIRECTORY | O_CLOEXEC
+    | extra_flags;
   int fd;
 #if IS_IN (rtld)
   assert (dfd == AT_FDCWD);
@@ -88,6 +89,8 @@ __opendirat (int dfd, const char *name)
   DIR *dirp = _hurd_fd_opendir (_hurd_fd_get (fd));
   if (dirp == NULL)
     __close (fd);
+  else if (pnew_fd != NULL)
+    *pnew_fd = fd;
 
   return dirp;
 }

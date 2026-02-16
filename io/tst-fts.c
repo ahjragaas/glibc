@@ -192,6 +192,8 @@ do_test (void)
      don't use FTS_LOGICAL.  */
 #ifndef TST_FTS_Y2038
   flags |= FTS_LOGICAL;
+#else
+  flags |= FTS_PHYSICAL;
 #endif
   fts = fts_open (paths, flags, &compare_ents);
   if (fts == NULL)

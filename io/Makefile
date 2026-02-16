@@ -197,7 +197,9 @@ tests := \
   tst-fcntl-lock-lfs \
   tst-fstatat \
   tst-fts \
+  tst-fts-bz22944 \
   tst-fts-lfs \
+  tst-fts-newflags \
   tst-ftw-bz26353 \
   tst-ftw-bz28126 \
   tst-ftw-lnk \
