@@ -150,8 +150,8 @@
 /* The `spawn' function family is supported.  */
 #define _POSIX_SPAWN	200809L
 
-/* We do not have POSIX timers, but could in future without ABI change.  */
-#define _POSIX_TIMERS	0
+/* We have POSIX timers.  */
+#define _POSIX_TIMERS	200809L
 
 /* The barrier functions are available.  */
 #define _POSIX_BARRIERS	200809L
