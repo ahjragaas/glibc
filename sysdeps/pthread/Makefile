@@ -71,6 +71,7 @@ tests += \
   tst-basic5 \
   tst-basic6 \
   tst-basic7 \
+  tst-bug24963 \
   tst-call-once \
   tst-cancel-self \
   tst-cancel-self-cancelstate \

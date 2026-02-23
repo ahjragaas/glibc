@@ -44,16 +44,26 @@ _IO_new_fclose (FILE *fp)
     return _IO_old_fclose (fp);
 #endif
 
-  /* First unlink the stream.  */
-  if (fp->_flags & _IO_IS_FILEBUF)
-    _IO_un_link ((struct _IO_FILE_plus *) fp);
-
   _IO_acquire_lock (fp);
   if (fp->_flags & _IO_IS_FILEBUF)
-    status = _IO_file_close_it (fp);
+    {
+      status = _IO_file_close_maybe_unlink (fp, false);
+      /* Skip future flushing.  */
+      fp->_flags2 |= _IO_FLAGS2_NOCLOSE;
+    }
   else
     status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
   _IO_release_lock (fp);
+
+  /* Unlink after releasing the lock on fp.  This maintains the usual
+     locking order (list_all_lock acquired first, then the fp lock).
+     The only valid reference to fp after a call to fclose is the
+     implicit reference to it as part of fflush (NULL).  The
+     _IO_un_link call here synchronizes with fflush (NULL).  Future
+     interaction with fflush (NULL) is not possible because the stream
+     is no longer on the list.  */
+  _IO_un_link ((struct _IO_FILE_plus *) fp);
+
   _IO_FINISH (fp);
   if (fp->_mode > 0)
     {

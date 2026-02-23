@@ -724,20 +724,25 @@ _IO_flush_all (void)
       run_fp = fp;
       _IO_flockfile (fp);
 
-      if (((fp->_mode <= 0 && fp->_IO_write_ptr > fp->_IO_write_base)
-	   || (_IO_vtable_offset (fp) == 0
-	       && fp->_mode > 0 && (fp->_wide_data->_IO_write_ptr
-				    > fp->_wide_data->_IO_write_base))
-	   )
-	  && _IO_OVERFLOW (fp, EOF) == EOF)
-	result = EOF;
-      if (_IO_fileno (fp) >= 0
-	  && ((fp->_mode <= 0 && fp->_IO_read_ptr < fp->_IO_read_end)
-	      || (_IO_vtable_offset (fp) == 0
-		  && fp->_mode > 0 && (fp->_wide_data->_IO_read_ptr
-				       < fp->_wide_data->_IO_read_end)))
-	  && _IO_SYNC (fp) != 0)
-	result = EOF;
+      /* If fp is in an freopen operation or about to be closed, do
+	 not flush it again.  Flushing is handled by these operations.  */
+      if ((fp->_flags2 & _IO_FLAGS2_NOCLOSE) == 0)
+	{
+	  if (((fp->_mode <= 0 && fp->_IO_write_ptr > fp->_IO_write_base)
+	       || (_IO_vtable_offset (fp) == 0
+		   && fp->_mode > 0 && (fp->_wide_data->_IO_write_ptr
+					> fp->_wide_data->_IO_write_base))
+	       )
+	      && _IO_OVERFLOW (fp, EOF) == EOF)
+	    result = EOF;
+	  if (_IO_fileno (fp) >= 0
+	      && ((fp->_mode <= 0 && fp->_IO_read_ptr < fp->_IO_read_end)
+		  || (_IO_vtable_offset (fp) == 0
+		      && fp->_mode > 0 && (fp->_wide_data->_IO_read_ptr
+					   < fp->_wide_data->_IO_read_end)))
+	      && _IO_SYNC (fp) != 0)
+	    result = EOF;
+	}
 
       _IO_funlockfile (fp);
       run_fp = NULL;
@@ -767,7 +772,11 @@ _IO_flush_all_linebuffered (void)
       run_fp = fp;
       _IO_flockfile (fp);
 
-      if ((fp->_flags & _IO_NO_WRITES) == 0 && fp->_flags & _IO_LINE_BUF)
+      /* Regarding _IO_FLAGS2_NOCLOSE: If fp is in an freopen
+	 operation or about to be closed, do not flush it again.
+	 Flushing is handled by these operations.  */
+      if ((fp->_flags & _IO_NO_WRITES) == 0 && fp->_flags & _IO_LINE_BUF
+	  && (fp->_flags2 & _IO_FLAGS2_NOCLOSE) == 0)
 	_IO_OVERFLOW (fp, EOF);
 
       _IO_funlockfile (fp);

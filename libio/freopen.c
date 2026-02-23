@@ -72,7 +72,10 @@ freopen (const char *filename, const char *mode, FILE *fp)
   else
 #endif
     {
-      _IO_file_close_it (fp);
+      /* Do not unlink the stream because it has to stay on the list.
+         Flushing through fflush (NULL) is prevented because the
+         stream is still locked.  */
+      _IO_file_close_maybe_unlink (fp, false);
       _IO_JUMPS_FILE_plus (fp) = &_IO_file_jumps;
       if (_IO_vtable_offset (fp) == 0 && fp->_wide_data != NULL)
 	fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
@@ -112,8 +115,19 @@ freopen (const char *filename, const char *mode, FILE *fp)
     __close (fd);
 
 end:
+  if (result == NULL)
+    /* After the unlock below, _IO_flush_all could run and try to
+       flush the partially closed stream.  Setting the flag prevents that.  */
+    fp->_flags2 |= _IO_FLAGS2_NOCLOSE;
+
   _IO_release_lock (fp);
-  if (result == NULL && (fp->_flags & _IO_IS_FILEBUF) != 0)
-    _IO_deallocate_file (fp);
+
+  /* See fclose for the concurrency impact.  */
+  if (result == NULL)
+    {
+      _IO_un_link ((struct _IO_FILE_plus *) fp);
+      if (fp->_flags & _IO_IS_FILEBUF)
+	_IO_deallocate_file (fp);
+    }
   return result;
 }

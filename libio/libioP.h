@@ -639,6 +639,7 @@ libc_hidden_proto (_IO_file_finish)
 
 extern FILE* _IO_new_file_attach (FILE *, int);
 extern int _IO_new_file_close_it (FILE *);
+int _IO_file_close_maybe_unlink (FILE *, bool) attribute_hidden;
 extern void _IO_new_file_finish (FILE *, int);
 extern FILE* _IO_new_file_fopen (FILE *, const char *, const char *,
 				     int);

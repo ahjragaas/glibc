@@ -86,7 +86,12 @@ typedef struct
 #define _IO_FLAGS2_MMAP 1
 #define _IO_FLAGS2_NOTCANCEL 2
 #define _IO_FLAGS2_USER_WBUF 8
+
+/* The file is in a freopen operation, or it is about to be closed.
+   Closing it does not deallocate its underlying file descriptor, and
+   fflush (NULL) will not flush this file.  */
 #define _IO_FLAGS2_NOCLOSE 32
+
 #define _IO_FLAGS2_CLOEXEC 64
 #define _IO_FLAGS2_NEED_LOCK 128
 

@@ -124,8 +124,10 @@ _IO_new_file_init (struct _IO_FILE_plus *fp)
   _IO_new_file_init_internal (fp);
 }
 
+/* Close FP, but do not deallocate it.  If UNLINK, call _IO_un_link to
+   remove the file from the global list of files if necessary.  */
 int
-_IO_new_file_close_it (FILE *fp)
+_IO_file_close_maybe_unlink (FILE *fp, bool unlink)
 {
   int flush_status = 0;
   if (!_IO_file_is_open (fp))
@@ -188,12 +190,21 @@ _IO_new_file_close_it (FILE *fp)
   _IO_setg (fp, NULL, NULL, NULL);
   _IO_setp (fp, NULL, NULL);
 
-  _IO_un_link ((struct _IO_FILE_plus *) fp);
-  fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;
+  if (unlink)
+    _IO_un_link ((struct _IO_FILE_plus *) fp);
+  /* Preserve the _IO_LINKED flag, so that _IO_un_link called from
+     fclose still unlinks the stream.  */
+  fp->_flags = _IO_MAGIC | CLOSED_FILEBUF_FLAGS | (fp->_flags & _IO_LINKED);
   fp->_fileno = -1;
   fp->_offset = _IO_pos_BAD;
 
   return close_status ? close_status : flush_status;
+}
+
+int
+_IO_new_file_close_it (FILE *fp)
+{
+  return _IO_file_close_maybe_unlink (fp, true);
 }
 libc_hidden_ver (_IO_new_file_close_it, _IO_file_close_it)
 
@@ -236,7 +247,12 @@ _IO_file_open (FILE *fp, const char *filename, int posix_mode, int prot,
 	  return NULL;
 	}
     }
-  _IO_link_in ((struct _IO_FILE_plus *) fp);
+
+  /* During reopen, do not try to link in the stream.  It is already on
+     the list.  This avoids deadlocks due to lock ordering issues.  */
+  if ((fp->_flags2 & _IO_FLAGS2_NOCLOSE) == 0)
+    _IO_link_in ((struct _IO_FILE_plus *) fp);
+
   return fp;
 }
 libc_hidden_def (_IO_file_open)
