@@ -28,6 +28,7 @@
 #include <support/xunistd.h>
 #include <support/xstdio.h>
 #include <sys/mman.h>
+#include <string.h>
 #include <unistd.h>
 
 /* Slow path in case we cannot find a gap with mmap (when the runtime has
