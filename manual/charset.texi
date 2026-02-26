@@ -1693,7 +1693,7 @@ enabled.  With transliteration enabled, characters that cannot be
 represented directly in the destination character set may be approximated
 using one or more similar characters that are available in the
 destination character set.  Characters outside of the destination
-character set and cannot be transliterated are replaced with a question
+character set that cannot be transliterated are replaced with a question
 mark @code{?}.
 
 The @var{tocode} argument may also be suffixed with @code{//IGNORE}.
