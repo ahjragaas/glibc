@@ -84,11 +84,18 @@ letter or digit; you should consider names of this form to be
 reserved names.  @xref{Reserved Names}.
 
 The error code values are all positive integers and are all distinct,
-with one exception: @code{EWOULDBLOCK} and @code{EAGAIN} are the same.
-Since the values are distinct, you can use them as labels in a
-@code{switch} statement; just don't use both @code{EWOULDBLOCK} and
-@code{EAGAIN}.  Your program should not make any other assumptions about
+so they can be used as labels in a @code{switch} statement.
+Your program should not make any other assumptions about
 the specific values of these symbolic constants.
+There are two exceptions to this rule:
+@itemize @bullet
+@item The values of @code{EAGAIN} and @code{EWOULDBLOCK} are
+equal on every supported operating system.
+@item The values of @code{ENOTSUP} and @code{EOPNOTSUPP} are equal
+on some supported operating systems, for example GNU/Linux.
+@end itemize
+To make your program portable, you should check for both codes and
+treat them the same.
 
 The value of @code{errno} doesn't necessarily have to correspond to any
 of these macros, since some library functions might return other error
@@ -383,8 +390,7 @@ not representable because of overflow or underflow.
 @standards{POSIX.1, errno.h}
 @errno{EAGAIN, 35, Resource temporarily unavailable}
 The call might work if you try again
-later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
-they are always the same in @theglibc{}.
+later.
 
 This error can happen in a few different situations:
 
@@ -395,12 +401,6 @@ non-blocking mode selected.  Trying the same operation again will block
 until some external condition makes it possible to read, write, or
 connect (whatever the operation).  You can use @code{select} to find out
 when the operation will be possible; @pxref{Waiting for I/O}.
-
-@strong{Portability Note:} In many older Unix systems, this condition
-was indicated by @code{EWOULDBLOCK}, which was a distinct error code
-different from @code{EAGAIN}.  To make your program portable, you should
-check for both codes and treat them the same.
-
 @item
 A temporary resource shortage made an operation impossible.  @code{fork}
 can return this error.  It indicates that the shortage is expected to
@@ -411,16 +411,16 @@ Such shortages are usually fairly serious and affect the whole system,
 so usually an interactive program should report the error to the user
 and return to its command loop.
 @end itemize
+
+@strong{Portability Note:} In @theglibc{},
+@code{EAGAIN} and @code{EWOULDBLOCK} are equal.
+Portable code should check for both errors and treat them the same.
 @end deftypevr
 
 @deftypevr Macro int EWOULDBLOCK
 @standards{BSD, errno.h}
 @errno{EWOULDBLOCK, EAGAIN, Operation would block}
 In @theglibc{}, this is another name for @code{EAGAIN} (above).
-The values are always the same, on every operating system.
-
-C libraries in many older Unix systems have @code{EWOULDBLOCK} as a
-separate error code.
 @end deftypevr
 
 @deftypevr Macro int EINPROGRESS
@@ -492,6 +492,10 @@ implemented for all communications protocols.  On @gnuhurdsystems{}, this
 error can happen for many calls when the object does not support the
 particular operation; it is a generic indication that the server knows
 nothing to do for that call.
+
+@strong{Portability Note:} Depending on the operating system, the
+values of @code{EOPNOTSUPP} and @code{ENOTSUP} may be equal.
+Portable code should check for both errors and treat them the same.
 @end deftypevr
 
 @deftypevr Macro int EPFNOSUPPORT
@@ -769,6 +773,10 @@ values.
 
 If the entire function is not available at all in the implementation,
 it returns @code{ENOSYS} instead.
+
+@strong{Portability Note:} Depending on the operating system, the
+values of @code{EOPNOTSUPP} and @code{ENOTSUP} may be equal.
+Portable code should check for both errors and treat them the same.
 @end deftypevr
 
 @deftypevr Macro int EILSEQ
