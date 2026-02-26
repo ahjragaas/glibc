@@ -16,7 +16,7 @@ features has been written, we are publishing it here.
 * Variadic Functions::          Defining functions with varying numbers
                                  of args.
 * Null Pointer Constant::       The macro @code{NULL}.
-* Important Data Types::        Data types for object sizes.
+* Important Data Types::        Types for sizes and alignments of objects.
 * Data Type Measurements::      Parameters of data type representations.
 @end menu
 
@@ -555,7 +555,8 @@ recommend instead adding a prototype for the function you are calling.
 The result of subtracting two pointers in C is always an integer, but the
 precise data type varies from C compiler to C compiler.  Likewise, the
 data type of the result of @code{sizeof} also varies between compilers.
-ISO C defines standard aliases for these two types, so you can refer to
+Also, it helps to have a data type with the greatest fundamental alignment.
+ISO C defines standard aliases for these types, so you can refer to
 them in a portable fashion.  They are defined in the header file
 @file{stddef.h}.
 @pindex stddef.h
@@ -583,12 +584,23 @@ will be @w{@code{unsigned int}} or @w{@code{unsigned long int}}.
 arguments or variables that hold the size of an object.
 @end deftp
 
-@strong{Compatibility Note:} Implementations of C before the advent of
-@w{ISO C} generally used @code{unsigned int} for representing object sizes
-and @code{int} for pointer subtraction results.  They did not
-necessarily define either @code{size_t} or @code{ptrdiff_t}.  Unix
-systems did define @code{size_t}, in @file{sys/types.h}, but the
-definition was usually a signed type.
+@deftp {Data Type} max_align_t
+@standards{ISO, stddef.h}
+@cindex fundamental alignment
+This is an object type with the greatest @dfn{fundamental alignment},
+i.e., the greatest alignment needed by standard types.
+Code can use @code{alignof (max_align_t)} when calculating space
+needed for arbitrary collections of objects, so long as the objects'
+types have a fundamental alignment and lack stricter alignment specifiers.
+@end deftp
+
+In @theglibc{}, the value of @code{alignof (max_align_t)} is 16 on
+most architectures.  However, it is 8 on 32-bit architectures that do
+not require 16-byte alignment from @code{malloc} to support predefined
+types.
+
+@strong{Compatibility Note:} The C11 standard introduced @code{max_align_t};
+older compilers may lack the type.
 
 @node Data Type Measurements
 @section Data Type Measurements
