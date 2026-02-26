@@ -652,10 +652,11 @@ savestring (const char *ptr, size_t len)
 @end group
 @end smallexample
 
-The block that @code{malloc} gives you is guaranteed to be aligned so
-that it can hold any type of data.  On @gnusystems{}, the address is
-always a multiple of eight on 32-bit systems, and a multiple of 16 on
-64-bit systems.  Only rarely is any higher boundary (such as a page
+In @theglibc{}, the block that @code{malloc} gives you is guaranteed
+to be aligned so that its address is a multiple of
+@code{alignof (max_align_t)}, so that it can hold object types
+with any fundamental alignment and without stricter alignment specifiers.
+Only rarely is any higher boundary (such as a page
 boundary) necessary; for those cases, use @code{aligned_alloc} or
 @code{posix_memalign} (@pxref{Aligned Memory Blocks}).
 
@@ -676,6 +677,18 @@ In @theglibc{}, a successful @code{malloc (0)}
 returns a non-null pointer to a newly allocated size-zero block;
 other implementations may return @code{NULL} instead.
 POSIX and the ISO C standard allow both behaviors.
+
+@item
+In @theglibc{}, a non-null pointer returned by @code{malloc (@var{size})}
+is a multiple of @code{alignof (max_align_t)} when converted to an integer.
+Other implementations may align the result only to what is needed for
+fundamentally-aligned objects of size at most @code{max (@var{size}, 1)}.
+For example, if @code{alignof (max_align_t)} is 16 but smaller
+fundamentally-aligned objects all have alignment of at most 4,
+other implementations of @code{malloc (15)} might return
+a pointer that is a multiple of 4 but not of 16 or even of 8.
+Portable code should therefore use a function like @code{aligned_alloc}
+if it needs @code{alignof (max_align_t)} alignment even for small allocations.
 
 @item
 In @theglibc{}, a failed @code{malloc} call sets @code{errno},
@@ -866,6 +879,10 @@ Otherwise, if @var{newsize} is zero
 Otherwise, if @code{realloc} cannot reallocate the requested size
 it returns @code{NULL} and sets @code{errno}; the original block
 is left undisturbed.
+
+Any non-null pointer returned by @code{realloc} satisfies the same
+alignment restrictions as a similar pointer returned by @code{malloc}
+with the same size.
 @end deftypefun
 
 @deftypefun {void *} reallocarray (void *@var{ptr}, size_t @var{nmemb}, size_t @var{size})
@@ -980,6 +997,12 @@ is declared in @file{stdlib.h}.
 This function allocates a block long enough to contain a vector of
 @var{count} elements, each of size @var{eltsize}.  Its contents are
 cleared to zero before @code{calloc} returns.
+
+In @theglibc{}, the vector is aligned the same way that @code{malloc}
+aligns its returned values.  In other implementations, it is merely
+aligned suitably for any array of fundamentally-aligned elements each
+with size at most @code{max (@var{size}, 1)}.
+
 @end deftypefun
 
 You could define @code{calloc} as follows:
