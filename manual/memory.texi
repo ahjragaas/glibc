@@ -318,6 +318,7 @@ any time (or never).
 @menu
 * Basic Allocation::            Simple use of @code{malloc}.
 * Malloc Examples::             Examples of @code{malloc}.  @code{xmalloc}.
+* Portable Allocation::         Portable use of @code{malloc}.
 * Freeing after Malloc::        Use @code{free} to free a block you
 				 got with @code{malloc}.
 * Changing Block Size::         Use @code{realloc} to make a block
@@ -621,7 +622,7 @@ If no more space is available, @code{malloc} returns a null pointer.
 You should check the value of @emph{every} call to @code{malloc}.  It is
 useful to write a subroutine that calls @code{malloc} and reports an
 error if the value is a null pointer, returning only if the value is
-nonzero.  This function is conventionally called @code{xmalloc}.  Here
+non-null.  This function is conventionally called @code{xmalloc}.  Here
 it is:
 @cindex @code{xmalloc} function
 
@@ -629,10 +630,10 @@ it is:
 void *
 xmalloc (size_t size)
 @{
-  void *value = malloc (size);
-  if (value == 0)
+  void *p = malloc (size);
+  if (p == NULL)
     fatal ("virtual memory exhausted");
-  return value;
+  return p;
 @}
 @end smallexample
 
@@ -645,9 +646,9 @@ a newly allocated null-terminated string:
 char *
 savestring (const char *ptr, size_t len)
 @{
-  char *value = xmalloc (len + 1);
-  value[len] = '\0';
-  return memcpy (value, ptr, len);
+  char *p = xmalloc (len + 1);
+  p[len] = '\0';
+  return memcpy (p, ptr, len);
 @}
 @end group
 @end smallexample
@@ -669,26 +670,28 @@ contents of another block.  If you have already allocated a block and
 discover you want it to be bigger, use @code{realloc} (@pxref{Changing
 Block Size}).
 
-@strong{Portability Notes:}
+@node Portable Allocation
+@subsubsection Portable Memory Allocation
+
+More care is needed when allocating memory in
+code intended to run on both GNU and non-GNU systems,
+or when a non-GNU replacement allocator is used (@pxref{Replacing malloc}).
+When storage size is small or outlandishly large,
+or when storage is allocated for a less-common type,
+the POSIX and ISO C standards permit multiple behaviors.
 
 @itemize @bullet
 @item
-In @theglibc{}, a successful @code{malloc (0)}
-returns a non-null pointer to a newly allocated size-zero block;
-other implementations may return @code{NULL} instead.
-POSIX and the ISO C standard allow both behaviors.
-
-@item
-In @theglibc{}, a non-null pointer returned by @code{malloc (@var{size})}
-is a multiple of @code{alignof (max_align_t)} when converted to an integer.
-Other implementations may align the result only to what is needed for
-fundamentally-aligned objects of size at most @code{max (@var{size}, 1)}.
-For example, if @code{alignof (max_align_t)} is 16 but smaller
-fundamentally-aligned objects all have alignment of at most 4,
-other implementations of @code{malloc (15)} might return
-a pointer that is a multiple of 4 but not of 16 or even of 8.
-Portable code should therefore use a function like @code{aligned_alloc}
-if it needs @code{alignof (max_align_t)} alignment even for small allocations.
+In most systems, a successful @code{malloc (0)}
+returns a non-null pointer to a newly allocated size-zero block.
+However, IBM AIX is unusual in that a successful @code{malloc (0)}
+returns a null pointer, and this breaks common code such as the
+implementation of @code{xmalloc} given in this manual.  @xref{Malloc Examples}.
+Code intended to be portable to IBM AIX can use
+@code{p = malloc (size | (size == 0))} instead of @code{p = malloc (size)},
+or if it does not mind a null pointer on success it can replace the following
+@code{if (p == NULL) fatal (...);} with
+@code{if (p == NULL && size != 0) fatal (...);}.
 
 @item
 In @theglibc{}, a failed @code{malloc} call sets @code{errno},
@@ -700,6 +703,50 @@ In @theglibc{}, @code{malloc} always fails when @var{size} exceeds
 @code{PTRDIFF_MAX}, to avoid problems with programs that subtract
 pointers or use signed indexes.  Other implementations may succeed in
 this case, leading to undefined behavior later.
+
+@item
+In @theglibc{}, @code{malloc (@var{size})} returns a pointer that when
+converted to an integer is a multiple of @code{alignof (max_align_t)}.
+Some other implementations may align the result only to what is needed for
+fundamentally-aligned objects of size at most @code{max (@var{size}, 1)}.
+For example, if @code{alignof (max_align_t)} is 16 but smaller
+fundamentally-aligned objects all have alignment of at most 4,
+other implementations of @code{malloc (15)} might return
+a pointer that is a multiple of 4 but not of 16 or even of 8.
+Portable code should therefore use a function like @code{aligned_alloc}
+if it needs @code{alignof (max_align_t)} alignment even for small allocations.
+
+@item
+Although @theglibc{}'s headers define only types with fundamental alignment,
+the C and POSIX standards require only the following types
+(if available) to have fundamental alignment:
+
+@quotation
+@code{char};
+all integer types (including @code{bool});
+@code{float}, @code{double}, @code{long double};
+@code{_Decimal32}, @code{_Decimal64}, @code{_Decimal128};
+@code{float _Complex}, @code{double _Complex}, @code{long double _Complex};
+all enumerated types;
+all pointer types;
+all array types whose element types have fundamental alignment;
+all struct and union types whose element types all have
+fundamental alignment and that lack stricter alignment specifiers;
+@code{va_list} (in @code{<stdarg.h>});
+@code{fpos_t} (in @code{<stdio.h>});
+@code{cnd_t}, @code{thrd_t}, @code{tss_t}, @code{mtx_t}, @code{once_flag}
+(in @code{<threads.h>});
+@code{mbstate_t} (in @code{<wchar.h>}).
+@end quotation
+
+@noindent
+In theory, portable code should not use @code{malloc} to
+allocate storage containing types not in this list;
+it should instead use functions like @code{aligned_alloc}.
+In practice, though, other implementations generally follow
+@theglibc{}'s lead and define only types with fundamental alignment,
+and it is generally portable to use @code{malloc} to allocate objects
+with types defined by the C library.
 @end itemize
 
 @node Freeing after Malloc
@@ -883,6 +930,8 @@ is left undisturbed.
 Any non-null pointer returned by @code{realloc} satisfies the same
 alignment restrictions as a similar pointer returned by @code{malloc}
 with the same size.
+Any special alignment created by @code{aligned_alloc}
+and similar functions is lost after @code{realloc}.
 @end deftypefun
 
 @deftypefun {void *} reallocarray (void *@var{ptr}, size_t @var{nmemb}, size_t @var{size})
@@ -899,6 +948,13 @@ returning a null pointer, and leaving the original block unchanged.
 
 @code{reallocarray} should be used instead of @code{realloc} when the new size
 of the allocated block is the result of a multiplication that might overflow.
+
+In @theglibc{}, the vector is aligned the same way that @code{malloc}
+aligns its returned values.  In other implementations, it may be merely
+aligned suitably for any array of fundamentally-aligned elements each
+with size at most @code{max (@var{size}, 1)}.
+Any special alignment created by @code{aligned_alloc}
+and similar functions is lost after @code{reallocarray}.
 
 This function was originally derived from OpenBSD 5.6, but was added in
 POSIX.1-2024.
@@ -922,8 +978,8 @@ as @code{xmalloc} does for @code{malloc}:
 void *
 xreallocarray (void *ptr, size_t nmemb, size_t size)
 @{
-  void *value = reallocarray (ptr, nmemb, size);
-  if (value == 0)
+  void *p = reallocarray (ptr, nmemb, size);
+  if (p == NULL)
     fatal ("Virtual memory exhausted");
   return value;
 @}
@@ -994,15 +1050,9 @@ is declared in @file{stdlib.h}.
 @c  chunk_is_mmapped dup ok
 @c  MALLOC_ZERO ok
 @c   memset dup ok
-This function allocates a block long enough to contain a vector of
-@var{count} elements, each of size @var{eltsize}.  Its contents are
-cleared to zero before @code{calloc} returns.
-
-In @theglibc{}, the vector is aligned the same way that @code{malloc}
-aligns its returned values.  In other implementations, it is merely
-aligned suitably for any array of fundamentally-aligned elements each
-with size at most @code{max (@var{size}, 1)}.
-
+This function allocates a zeroed vector.  It acts like
+@code{reallocarray (NULL, @var{count}, @var{eltsize})} except that the
+vector's contents are cleared to zero before @code{calloc} returns.
 @end deftypefun
 
 You could define @code{calloc} as follows:
@@ -1011,10 +1061,10 @@ You could define @code{calloc} as follows:
 void *
 calloc (size_t count, size_t eltsize)
 @{
-  void *value = reallocarray (0, count, eltsize);
-  if (value != 0)
-    memset (value, 0, count * eltsize);
-  return value;
+  void *p = reallocarray (0, count, eltsize);
+  if (p != NULL)
+    memset (p, 0, count * eltsize);
+  return p;
 @}
 @end smallexample
 
@@ -1934,7 +1984,9 @@ functions (that is, all the functions used by the application,
 failures, and, at run time, to heap corruption and application crashes.
 Replacement functions should implement the behavior documented for
 their counterparts in @theglibc{}; for example, the replacement
-@code{free} should also preserve @code{errno}.
+@code{malloc} should return a null pointer only when failing,
+it should return pointers aligned to @code{alignof (max_align_t)},
+and the replacement @code{free} should preserve @code{errno}.
 
 The minimum set of functions which has to be provided by a custom
 @code{malloc} is given in the table below.
