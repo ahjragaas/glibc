@@ -13,7 +13,12 @@ Major new features:
 
 Deprecated and removed features, and other changes affecting compatibility:
 
-  [Add deprecations, removals and changes affecting compatibility here]
+* Although malloc and related functions currently return pointers
+  aligned to alignof (max_align_t), the documentation now says future
+  versions of glibc may relax alignment requirements for small allocations.
+  For example, a future malloc (1) might return a pointer with odd
+  alignment, because no object of size 1 can have a fundamental
+  alignment greater than 1.
 
 Changes to build and runtime requirements:
 

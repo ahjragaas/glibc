@@ -653,13 +653,17 @@ savestring (const char *ptr, size_t len)
 @end group
 @end smallexample
 
-In @theglibc{}, the block that @code{malloc} gives you is guaranteed
-to be aligned so that its address is a multiple of
+In the current release of @theglibc{}, the block that @code{malloc} gives you is
+aligned so that its address is a multiple of
 @code{alignof (max_align_t)}, so that it can hold object types
 with any fundamental alignment and without stricter alignment specifiers.
 Only rarely is any higher boundary (such as a page
 boundary) necessary; for those cases, use @code{aligned_alloc} or
 @code{posix_memalign} (@pxref{Aligned Memory Blocks}).
+Future releases of @theglibc{} may relax alignment for small allocations,
+so long as any object with fundamental alignment that fits in the small
+allocation will be properly aligned.  For example, a future @code{malloc (1)}
+might return a pointer with odd alignment.
 
 Note that the memory located after the end of the block is likely to be
 in use for something else; perhaps a block already allocated by another
