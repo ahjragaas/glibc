@@ -1392,7 +1392,7 @@ _S_msg_sig_post (mach_port_t me,
   if (err = signal_allowed (signo, refport))
     return err;
 
-  d.code = d.exc_subcode = sigcode;
+  d.code = d.exc_subcode = (int) sigcode;
   d.exc = 0;
 
   /* Post the signal to a global receiver thread (or mark it pending in
