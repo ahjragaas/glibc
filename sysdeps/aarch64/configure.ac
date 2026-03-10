@@ -105,3 +105,29 @@ then
 else
   LIBC_CONFIG_VAR([have-test-gcs], [no])
 fi
+
+# Check if compiler supports MEMTAG stack support.  Also check if linker
+# support the required options (clang might only support ti for Android
+# builds).
+LIBC_TRY_CC_AND_TEST_CC_OPTION(
+  [if compiler supports -fsanitize=memtag-stack],
+  [-Werror -march=armv8.5-a+memtag -fsanitize=memtag-stack],
+  libc_cv_cc_memtag_stack,
+  [libc_cv_cc_memtag_stack=yes],
+  [libc_cv_cc_memtag_stack=no],
+  libc_cv_test_cc_memtag_stack,
+  [libc_cv_test_cc_memtag_stack=yes],
+  [libc_cv_test_cc_memtag_stack=no]
+)
+# lld requires the memtag-mode to be used along memtag-stack
+LIBC_LINKER_FEATURE(
+  [-z memtag-stack], [-Wl,--fatal-warnings -Wl,-z,memtag-stack -z memtag-mode=sync],
+  [libc_cv_ld_memtag_stack=yes], [libc_cv_ld_memtag_stack=no]
+)
+if test $libc_cv_test_cc_memtag_stack = yes && \
+   test $libc_cv_ld_memtag_stack = yes
+then
+   LIBC_CONFIG_VAR([have-test-memtag-stack], [yes])
+else
+   LIBC_CONFIG_VAR([have-test-memtag-stack], [no])
+fi
