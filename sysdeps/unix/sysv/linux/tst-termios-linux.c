@@ -163,18 +163,6 @@ static speed_t speed_to_cbaud (speed_t speed)
   return ct->cbaud;
 }
 
-/* Returns ANY if cbaud is __BOTHER, or BOGUS if invalid */
-static speed_t cbaud_to_speed (speed_t cbaud)
-{
-  const struct cbaud_table *ct;
-  for (ct = cbaud_table; ct->cbaud != BOGUS; ct++)
-    {
-      if (ct->cbaud == cbaud)
-	break;
-    }
-  return ct->speed;
-}
-
 static const char *cbaud_name (speed_t cbaud)
 {
   const struct cbaud_table *ct;
@@ -512,6 +500,18 @@ old_tcspeed_test (int fd, speed_t speed)
   VERIFY (__old_cfgetispeed (&tio), cbaud);
   CHECKZERO (old_tcsetattr (fd, &tio));
   check_speeds_tc (fd, speed, speed);
+}
+
+/* Returns ANY if cbaud is __BOTHER, or BOGUS if invalid */
+static speed_t cbaud_to_speed (speed_t cbaud)
+{
+  const struct cbaud_table *ct;
+  for (ct = cbaud_table; ct->cbaud != BOGUS; ct++)
+    {
+      if (ct->cbaud == cbaud)
+	break;
+    }
+  return ct->speed;
 }
 
 /* Verify that invalid CBAUD values return error for the old interfaces */
