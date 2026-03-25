@@ -254,7 +254,7 @@ libsupport-routines = \
   xwrite \
   # libsupport-routines
 
-libsupport-static-only-routines := $(libsupport-routines)
+libsupport-static-only-routines = $(libsupport-routines) $(libsupport-sysdep_routines)
 # Only build one variant of the library.
 libsupport-inhibit-o := .os
 ifeq ($(build-shared),yes)

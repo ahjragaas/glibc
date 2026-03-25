@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <array_length.h>
 #include <libc-pointer-arith.h>
+#include <support/address-diff.h>
 #include <support/check.h>
 #include "tst-malloc-aux.h"
 
@@ -82,9 +83,9 @@ do_test (void)
       /* This should return the same chunk as was just free'd.  */
       tcache_allocs[i].ptr2 = memalign (tcache_allocs[i].alignment, sz2);
       CHECK (tcache_allocs[i].ptr2, tcache_allocs[i].alignment);
+      TEST_VERIFY (support_address_diff (
+	tcache_allocs[i].ptr1, tcache_allocs[i].ptr2) == 0);
       free (tcache_allocs[i].ptr2);
-
-      TEST_VERIFY (tcache_allocs[i].ptr1 == tcache_allocs[i].ptr2);
     }
 
   /* Test for non-head tcache hits.  This exercises the memalign
@@ -110,7 +111,7 @@ do_test (void)
 
   count = 0;
   for (i = 0; i < 10; ++ i)
-    if (ptr[i] == p)
+    if (support_address_diff (ptr[i], p) == 0)
       ++ count;
   free (p);
   TEST_VERIFY (count > 0);
@@ -146,7 +147,8 @@ do_test (void)
     {
       int ok = 0;
       for (j = 0; j < LN; ++ j)
-	if (large_allocs[i].ptr1 == large_allocs[j].ptr2)
+	if (support_address_diff (large_allocs[i].ptr1, large_allocs[j].ptr2)
+	    == 0)
 	  ok = 1;
       if (ok == 1)
 	count ++;

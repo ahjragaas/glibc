@@ -22,6 +22,7 @@
 #include <string.h>
 #include <libc-diag.h>
 #include <support/check.h>
+#include <support/address-diff.h>
 
 #include "tst-malloc-aux.h"
 
@@ -155,9 +156,9 @@ do_test (void)
       size_t newsz = malloc_usable_size (p);
       printf ("size: %zu, usable size: %zu, extra: %zu\n",
 	      sz, newsz, newsz - sz);
-      uintptr_t oldp = (uintptr_t) p;
+      void *oldp = p;
       void *new_p = realloc (p, newsz);
-      if ((uintptr_t) new_p != oldp)
+      if (support_address_diff (new_p, oldp) != 0)
 	FAIL_EXIT1 ("Expanding (%zu bytes) to usable size (%zu) moved block",
 		    sz, newsz);
       free (new_p);

@@ -90,3 +90,9 @@ endif
 ifeq ($(subdir),malloc)
 sysdep_malloc_debug_routines = __mtag_tag_zero_region __mtag_tag_region
 endif # malloc directory
+
+ifeq ($(subdir),support)
+libsupport-sysdep_routines += \
+  support-address-diff \
+  # libsupport-sysdep_routines
+endif

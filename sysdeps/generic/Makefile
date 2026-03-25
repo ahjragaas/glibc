@@ -38,3 +38,9 @@ endif
 ifeq ($(subdir),misc)
 sysdep_routines += hugepages
 endif
+
+ifeq ($(subdir),support)
+libsupport-sysdep_routines += \
+  support-address-diff \
+  # libsupport-sysdep_routines
+endif
