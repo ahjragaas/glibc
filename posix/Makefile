@@ -315,6 +315,7 @@ tests := \
   tst-rxspencer-no-utf8 \
   tst-sched_getaffinity \
   tst-spawn-chdir \
+  tst-spawn-chdir-posix \
   tst-spawn4 \
   tst-spawn5 \
   tst-spawn6 \
