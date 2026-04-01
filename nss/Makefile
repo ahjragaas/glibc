@@ -317,6 +317,7 @@ tests := \
   test-netdb \
   test-rpcent \
   testgrp \
+  tst-default-domain \
   tst-fgetsgent_r \
   tst-getaddrinfo \
   tst-getaddrinfo2 \
@@ -514,6 +515,8 @@ endif
 
 $(objpfx)tst-nss-files-alias-leak.out: $(objpfx)libnss_files.so
 $(objpfx)tst-nss-files-alias-truncated.out: $(objpfx)libnss_files.so
+
+$(objpfx)tst-default-domain: $(objpfx)nisdomain.os
 
 tst-nss-gai-hv2-canonname-ENV = \
 		MALLOC_TRACE=$(objpfx)tst-nss-gai-hv2-canonname.mtrace \

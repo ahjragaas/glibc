@@ -36,7 +36,7 @@ __nss_get_default_domain (char **outdomain)
 
   __libc_lock_lock (domainname_lock);
 
-  if (domainname[0] != '\0')
+  if (domainname[0] == '\0')
     {
       if (getdomainname (domainname, MAXDOMAINNAMELEN) < 0)
 	result = errno;
