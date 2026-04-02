@@ -181,11 +181,8 @@ _IO_wdefault_finish (FILE *fp, int dummy)
   for (mark = fp->_markers; mark != NULL; mark = mark->_next)
     mark->_sbuf = NULL;
 
-  if (fp->_IO_save_base)
-    {
-      free (fp->_wide_data->_IO_save_base);
-      fp->_IO_save_base = NULL;
-    }
+  if (_IO_have_wbackup (fp))
+    _IO_free_wbackup_area (fp);
 
 #ifdef _IO_MTSAFE_IO
   if (fp->_lock != NULL)

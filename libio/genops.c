@@ -636,11 +636,8 @@ _IO_default_finish (FILE *fp, int dummy)
   for (mark = fp->_markers; mark != NULL; mark = mark->_next)
     mark->_sbuf = NULL;
 
-  if (fp->_IO_save_base)
-    {
-      _IO_free_backup_buf (fp, fp->_IO_save_base);
-      fp->_IO_save_base = NULL;
-    }
+  if (_IO_have_backup (fp))
+    _IO_free_backup_area (fp);
 
   _IO_un_link ((struct _IO_FILE_plus *) fp);
 

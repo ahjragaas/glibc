@@ -135,6 +135,7 @@ tests = \
   tst-swscanf \
   tst-ungetwc1 \
   tst-ungetwc2 \
+  tst-wbackup-leak \
   tst-wfile-sync \
   tst-wfiledoallocate-static \
   tst-widetext \

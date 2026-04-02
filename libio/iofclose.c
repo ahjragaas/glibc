@@ -67,6 +67,8 @@ _IO_new_fclose (FILE *fp)
   _IO_FINISH (fp);
   if (fp->_mode > 0)
     {
+      if (_IO_have_wbackup (fp))
+	_IO_free_wbackup_area (fp);
       /* This stream has a wide orientation.  This means we have to free
 	 the conversion functions.  */
       struct _IO_codecvt *cc = fp->_codecvt;
