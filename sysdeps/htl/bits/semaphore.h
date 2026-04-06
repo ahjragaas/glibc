@@ -36,6 +36,6 @@ typedef union
   long int __align;
 } sem_t;
 
-#define SEM_FAILED ((void *) 0)
+#define SEM_FAILED ((sem_t *) 0)
 
 #endif /* bits/semaphore.h */
