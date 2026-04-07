@@ -20,6 +20,7 @@
 
 #include <netdb.h>
 #include <support/check.h>
+#include <support/namespace.h>
 
 /* Query getaddrinfo with various address families and verify that
    it returns EAI_AGAIN when DNS resolution fails.  */
@@ -49,6 +50,9 @@ query_host (const char *host_name)
 static int
 do_test (void)
 {
+  /* Hide any name server that might be running on 127.0.0.1.  */
+  support_enter_network_namespace ();
+
   query_host ("site.example");
   return 0;
 }
