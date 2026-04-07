@@ -1,4 +1,4 @@
-/* Malloc huge page support.  Generic implementation.
+/* Huge page support.  Generic implementation.
    Copyright (C) 2021-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -16,33 +16,37 @@
    License along with the GNU C Library; see the file COPYING.LIB.  If
    not, see <https://www.gnu.org/licenses/>.  */
 
-#ifndef _MALLOC_HUGEPAGES_H
-#define _MALLOC_HUGEPAGES_H
+#ifndef _HUGEPAGES_H
+#define _HUGEPAGES_H
 
 #include <stddef.h>
 
 /* Return the default transparent huge page size.  */
-unsigned long int __malloc_default_thp_pagesize (void) attribute_hidden;
+unsigned long int __get_thp_size (void) attribute_hidden;
 
-enum malloc_thp_mode_t
+enum thp_mode_t
 {
-  malloc_thp_mode_always,
-  malloc_thp_mode_madvise,
-  malloc_thp_mode_never,
-  malloc_thp_mode_not_supported
+  thp_mode_always,
+  thp_mode_madvise,
+  thp_mode_never,
+  thp_mode_not_supported
 };
 
-enum malloc_thp_mode_t __malloc_thp_mode (void) attribute_hidden;
+enum thp_mode_t __get_thp_mode (void) attribute_hidden;
 
 /* Return the supported huge page size from the REQUESTED sizes on PAGESIZE
    along with the required extra mmap flags on FLAGS,  Requesting the value
    of 0 returns the default huge page size, otherwise the value will be
    matched against the sizes supported by the system.  */
-void __malloc_hugepage_config (size_t requested, size_t *pagesize, int *flags)
+void __get_hugepage_config (size_t requested, size_t *pagesize, int *flags)
      attribute_hidden;
 
-#ifndef DEFAULT_THP_PAGESIZE
-# define DEFAULT_THP_PAGESIZE	0
+#ifndef MALLOC_DEFAULT_THP_PAGESIZE
+# define MALLOC_DEFAULT_THP_PAGESIZE	0
 #endif
 
-#endif /* _MALLOC_HUGEPAGES_H */
+#ifndef MAX_THP_PAGESIZE
+# define MAX_THP_PAGESIZE	(32 * 1024 * 1024)
+#endif
+
+#endif /* _HUGEPAGES_H */

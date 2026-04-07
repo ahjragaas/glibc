@@ -22,7 +22,7 @@
 #include <malloc-machine.h>
 #include <malloc-sysdep.h>
 #include <malloc-size.h>
-#include <malloc-hugepages.h>
+#include <hugepages.h>
 #include <calloc-clear-memory.h>
 
 /* Called in the parent process before a fork.  */

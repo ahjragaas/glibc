@@ -1759,7 +1759,7 @@ struct malloc_par
   INTERNAL_SIZE_T arena_max;
 
   /* Transparent Large Page support.  */
-  enum malloc_thp_mode_t thp_mode;
+  enum thp_mode_t thp_mode;
   INTERNAL_SIZE_T thp_pagesize;
   /* A value different than 0 means to align mmap allocation to hp_pagesize
      add hp_flags on flags.  */
@@ -1814,7 +1814,7 @@ static struct malloc_par mp_ =
   .trim_threshold = DEFAULT_TRIM_THRESHOLD,
 #define NARENAS_FROM_NCORES(n) ((n) * (sizeof (long) == 4 ? 2 : 8))
   .arena_test = NARENAS_FROM_NCORES (1),
-  .thp_mode = malloc_thp_mode_not_supported
+  .thp_mode = thp_mode_not_supported
 #if USE_TCACHE
   ,
   .tcache_count = TCACHE_FILL_COUNT,
@@ -1896,7 +1896,7 @@ madvise_thp (void *p, INTERNAL_SIZE_T size)
 
   /* Only use __madvise if the system is using 'madvise' mode and the size
      is at least a huge page, otherwise the call is wasteful. */
-  if (mp_.thp_mode != malloc_thp_mode_madvise || size < mp_.thp_pagesize)
+  if (mp_.thp_mode != thp_mode_madvise || size < mp_.thp_pagesize)
     return;
 
   /* Linux requires the input address to be page-aligned, and unaligned
@@ -5017,33 +5017,32 @@ do_set_mxfast (size_t value)
 static __always_inline int
 do_set_hugetlb (size_t value)
 {
-  /* Enable THP if DEFAULT_THP_PAGESIZE is non-zero.  */
-  if (DEFAULT_THP_PAGESIZE > 0)
+  /* Enable THP if MALLOC_DEFAULT_THP_PAGESIZE is non-zero.  */
+  if (MALLOC_DEFAULT_THP_PAGESIZE > 0)
     {
-      mp_.thp_mode = malloc_thp_mode_madvise;
-      mp_.thp_pagesize = DEFAULT_THP_PAGESIZE;
+      mp_.thp_mode = thp_mode_madvise;
+      mp_.thp_pagesize = MALLOC_DEFAULT_THP_PAGESIZE;
     }
 
   if (value == 0)
     {
       /* Turn off THP support completely.  */
-      mp_.thp_mode = malloc_thp_mode_never;
+      mp_.thp_mode = thp_mode_never;
       mp_.thp_pagesize = 0;
     }
   else if (value == 1)
     {
       /* Avoid querying the THP page size/mode since accessing /sys/kernel/mm
 	 is relatively slow and might not be accessible in containers.  */
-      if (DEFAULT_THP_PAGESIZE > 0)
+      if (MALLOC_DEFAULT_THP_PAGESIZE > 0)
 	return 0;
 
-      mp_.thp_mode = __malloc_thp_mode ();
-      if (mp_.thp_mode == malloc_thp_mode_madvise
-          || mp_.thp_mode == malloc_thp_mode_always)
-	mp_.thp_pagesize = __malloc_default_thp_pagesize ();
+      mp_.thp_mode = __get_thp_mode ();
+      if (mp_.thp_mode == thp_mode_madvise || mp_.thp_mode == thp_mode_always)
+	mp_.thp_pagesize = __get_thp_size ();
     }
   else if (value >= 2)
-    __malloc_hugepage_config (value == 2 ? 0 : value, &mp_.hp_pagesize,
+    __get_hugepage_config (value == 2 ? 0 : value, &mp_.hp_pagesize,
 			      &mp_.hp_flags);
   return 0;
 }

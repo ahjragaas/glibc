@@ -18,16 +18,13 @@
 
 #include <intprops.h>
 #include <dirent.h>
-#include <malloc-hugepages.h>
+#include <hugepages.h>
 #include <not-cancel.h>
 #include <sys/mman.h>
 
 unsigned long int
-__malloc_default_thp_pagesize (void)
+__get_thp_size (void)
 {
-  if (DEFAULT_THP_PAGESIZE != 0)
-    return DEFAULT_THP_PAGESIZE;
-
   int fd = __open64_nocancel (
     "/sys/kernel/mm/transparent_hugepage/hpage_pmd_size", O_RDONLY);
   if (fd == -1)
@@ -50,13 +47,13 @@ __malloc_default_thp_pagesize (void)
   return r;
 }
 
-enum malloc_thp_mode_t
-__malloc_thp_mode (void)
+enum thp_mode_t
+__get_thp_mode (void)
 {
   int fd = __open64_nocancel ("/sys/kernel/mm/transparent_hugepage/enabled",
 			      O_RDONLY);
   if (fd == -1)
-    return malloc_thp_mode_not_supported;
+    return thp_mode_not_supported;
 
   static const char mode_always[]  = "[always] madvise never\n";
   static const char mode_madvise[] = "always [madvise] never\n";
@@ -65,24 +62,26 @@ __malloc_thp_mode (void)
   char str[sizeof(mode_always)];
   ssize_t s = __read_nocancel (fd, str, sizeof (str));
   if (s >= sizeof str || s < 0)
-    return malloc_thp_mode_not_supported;
+    return thp_mode_not_supported;
   str[s] = '\0';
   __close_nocancel (fd);
 
   if (s == sizeof (mode_always) - 1)
     {
       if (strcmp (str, mode_always) == 0)
-	return malloc_thp_mode_always;
+	return thp_mode_always;
       else if (strcmp (str, mode_madvise) == 0)
-	return malloc_thp_mode_madvise;
+	return thp_mode_madvise;
       else if (strcmp (str, mode_never) == 0)
-	return malloc_thp_mode_never;
+	return thp_mode_never;
     }
-  return malloc_thp_mode_not_supported;
+  return thp_mode_not_supported;
 }
 
+#if !IS_IN (rtld)
+
 static size_t
-malloc_default_hugepage_size (void)
+get_default_hugepage_size (void)
 {
   int fd = __open64_nocancel ("/proc/meminfo", O_RDONLY);
   if (fd == -1)
@@ -136,14 +135,14 @@ hugepage_flags (size_t pagesize)
 }
 
 void
-__malloc_hugepage_config (size_t requested, size_t *pagesize, int *flags)
+__get_hugepage_config (size_t requested, size_t *pagesize, int *flags)
 {
   *pagesize = 0;
   *flags = 0;
 
   if (requested == 0)
     {
-      *pagesize = malloc_default_hugepage_size ();
+      *pagesize = get_default_hugepage_size ();
       if (*pagesize != 0)
 	*flags = hugepage_flags (*pagesize);
       return;
@@ -205,3 +204,5 @@ __malloc_hugepage_config (size_t requested, size_t *pagesize, int *flags)
 
   __close_nocancel (dirfd);
 }
+
+#endif /* !IS_IN(rtld) */
