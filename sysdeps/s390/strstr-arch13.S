@@ -1,4 +1,4 @@
-/* Vector optimized 32/64 bit S/390 version of strstr.
+/* Vector optimized 64 bit S/390 version of strstr.
    Copyright (C) 2019-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -26,7 +26,6 @@
    Locate a substring.  */
 ENTRY(STRSTR_ARCH13)
 	.machine "arch13"
-	.machinemode "zarch_nohighgprs"
 	lcbb	%r1,0(%r3),6
 	jo	.Lneedle_on_bb	/* Needle on block-boundary?  */
 	vl	%v18,0(%r3),6	/* Load needle.  */

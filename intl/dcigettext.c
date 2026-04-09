@@ -72,7 +72,7 @@ extern int errno;
   /* Guess whether integer division by zero raises signal SIGFPE.
      Set to 1 only if you know for sure.  In case of doubt, set to 0.  */
 # if defined __alpha__ || defined __arm__ || defined __i386__ \
-     || defined __m68k__ || defined __s390__
+     || defined __m68k__ || defined __s390x__
 #  define INTDIV0_RAISES_SIGFPE 1
 # else
 #  define INTDIV0_RAISES_SIGFPE 0

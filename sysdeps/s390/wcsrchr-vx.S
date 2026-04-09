@@ -1,4 +1,4 @@
-/* Vector optimized 32/64 bit S/390 version of wcsrchr.
+/* Vector optimized 64 bit S/390 version of wcsrchr.
    Copyright (C) 2015-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -42,7 +42,6 @@
 */
 ENTRY(WCSRCHR_Z13)
 	.machine "z13"
-	.machinemode "zarch_nohighgprs"
 
 	vlbb	%v16,0(%r2),6	/* Load s until next 4k-byte boundary.  */
 	lcbb	%r0,0(%r2),6	/* Get bytes to 4k-byte boundary or 16.  */

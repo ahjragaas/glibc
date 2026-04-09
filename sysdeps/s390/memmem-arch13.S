@@ -1,4 +1,4 @@
-/* Vector optimized 32/64 bit S/390 version of memmem.
+/* Vector optimized 64 bit S/390 version of memmem.
    Copyright (C) 2019-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -27,13 +27,6 @@
    Locate a substring.  */
 ENTRY(MEMMEM_ARCH13)
 	.machine "arch13"
-	.machinemode "zarch_nohighgprs"
-# if ! defined __s390x__
-	llgfr	%r3,%r3
-	llgfr	%r5,%r5
-	llgfr	%r4,%r4
-	llgfr	%r2,%r2
-# endif /* ! defined __s390x__ */
 	clgrjl	%r3,%r5,.Lend_no_match	/* Haystack < needle?  */
 
 	/* Jump to fallback if needle > 9.  See also strstr-arch13.S.  */

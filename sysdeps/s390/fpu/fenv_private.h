@@ -1,4 +1,4 @@
-/* Private floating point rounding and exceptions handling.  390/s390x version.
+/* Private floating point rounding and exceptions handling.  s390x version.
    Copyright (C) 2019-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

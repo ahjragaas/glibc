@@ -1,4 +1,4 @@
-/* Vector optimized 32/64 bit S/390 version of stpncpy.
+/* Vector optimized 64 bit S/390 version of stpncpy.
    Copyright (C) 2015-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -42,11 +42,6 @@
 */
 ENTRY(STPNCPY_Z13)
 	.machine "z13"
-	.machinemode "zarch_nohighgprs"
-
-# if !defined __s390x__
-	llgfr	%r4,%r4
-# endif /* !defined __s390x__ */
 
 	clgfi	%r4,0
 	ber	%r14		/* Nothing to do, if n == 0.  */

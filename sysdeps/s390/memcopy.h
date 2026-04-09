@@ -18,6 +18,6 @@
 
 #include <sysdeps/generic/memcopy.h>
 
-/* The s390/s390x memcpy implementations are safe to be used by memmove.  */
+/* The s390x memcpy implementations are safe to be used by memmove.  */
 #undef MEMCPY_OK_FOR_FWD_MEMMOVE
 #define MEMCPY_OK_FOR_FWD_MEMMOVE 1

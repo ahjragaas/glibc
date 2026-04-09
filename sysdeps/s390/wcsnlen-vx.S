@@ -1,4 +1,4 @@
-/* Vector optimized 32/64 bit S/390 version of wcsnlen.
+/* Vector optimized 64 bit S/390 version of wcsnlen.
    Copyright (C) 2015-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -38,11 +38,6 @@
 ENTRY(WCSNLEN_Z13)
 
 	.machine "z13"
-	.machinemode "zarch_nohighgprs"
-
-# if !defined __s390x__
-	llgfr	%r3,%r3
-# endif /* !defined __s390x__ */
 
 	clgfi	%r3,0		/* if maxlen == 0, return 0.  */
 	locgre	%r2,%r3
@@ -56,13 +51,8 @@ ENTRY(WCSNLEN_Z13)
 	jne	.Lfallback	/* And use common-code variant if not.  */
 
 	/* Check range of maxlen and convert to byte-count.  */
-# ifdef __s390x__
 	tmhh	%r3,49152	/* Test bit 0 or 1 of maxlen.  */
 	lghi	%r4,-4		/* Max byte-count is 18446744073709551612.  */
-# else
-	tmlh	%r3,49152	/* Test bit 0 or 1 of maxlen.  */
-	llilf	%r4,4294967292	/* Max byte-count is 4294967292.  */
-# endif /* !__s390x__ */
 	sllg	%r3,%r3,2	/* Convert character-count to byte-count.  */
 	locgrne	%r3,%r4		/* Use max byte-count, if bit 0/1 was one.  */
 

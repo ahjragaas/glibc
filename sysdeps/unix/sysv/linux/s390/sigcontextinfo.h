@@ -23,11 +23,7 @@
 static inline uintptr_t
 sigcontext_get_pc (const ucontext_t *ctx)
 {
-#ifdef __s390x__
  return ctx->uc_mcontext.psw.addr;
-#else
- return ctx->uc_mcontext.psw.addr & 0x7FFFFFFF;
-#endif
 }
 
 #endif

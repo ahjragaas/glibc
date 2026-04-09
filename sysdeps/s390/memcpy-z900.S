@@ -1,4 +1,4 @@
-/* memcpy - copy a block from source to destination.  31/64 bit S/390 version.
+/* memcpy - copy a block from source to destination.  64 bit S/390 version.
    Copyright (C) 2012-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -28,83 +28,49 @@
 
        .text
 
-#if defined __s390x__
-# define LTGR	ltgr
-# define CGHI	cghi
-# define LGR	lgr
-# define AGHI	aghi
-# define BRCTG	brctg
-#else
-# define LTGR	ltr
-# define CGHI	chi
-# define LGR	lr
-# define AGHI	ahi
-# define BRCTG	brct
-#endif /* ! defined __s390x__  */
-
-#if HAVE_MEMCPY_Z900_G5
-ENTRY(MEMPCPY_Z900_G5)
-# if defined __s390x__
+#if HAVE_MEMCPY_Z900
+ENTRY(MEMPCPY_Z900)
 	.machine "z900"
-# else
-	.machine "g5"
-# endif /* ! defined __s390x__  */
-	LGR     %r1,%r2             # Use as dest
+	lgr     %r1,%r2             # Use as dest
 	la      %r2,0(%r4,%r2)      # Return dest + n
-	j	.L_Z900_G5_start
-END(MEMPCPY_Z900_G5)
+	j	.L_Z900_start
+END(MEMPCPY_Z900)
 
-ENTRY(MEMCPY_Z900_G5)
-# if defined __s390x__
+ENTRY(MEMCPY_Z900)
 	.machine "z900"
-# else
-	.machine "g5"
-# endif /* ! defined __s390x__  */
-	LGR     %r1,%r2             # r1: Use as dest ; r2: Return dest
-.L_Z900_G5_start:
-	LTGR    %r4,%r4
-	je      .L_Z900_G5_4
-	AGHI    %r4,-1
-# if defined __s390x__
+	lgr     %r1,%r2             # r1: Use as dest ; r2: Return dest
+.L_Z900_start:
+	ltgr    %r4,%r4
+	je      .L_Z900_4
+	aghi    %r4,-1
 	srlg	%r5,%r4,8
-# else
-	lr	%r5,%r4
-	srl	%r5,8
-# endif /* ! defined __s390x__  */
-	LTGR    %r5,%r5
-	jne     .L_Z900_G5_13
-.L_Z900_G5_3:
-# if defined __s390x__
-	larl    %r5,.L_Z900_G5_15
-#  define Z900_G5_EX_D 0
-# else
-	basr    %r5,0
-.L_Z900_G5_14:
-#  define Z900_G5_EX_D .L_Z900_G5_15-.L_Z900_G5_14
-# endif /* ! defined __s390x__  */
-	ex      %r4,Z900_G5_EX_D(%r5)
-.L_Z900_G5_4:
+	ltgr    %r5,%r5
+	jne     .L_Z900_13
+.L_Z900_3:
+	larl    %r5,.L_Z900_15
+	ex      %r4,0(%r5)
+.L_Z900_4:
 	br      %r14
-.L_Z900_G5_13:
-	CGHI	%r5,4096            # Switch to mvcle for copies >1MB
+.L_Z900_13:
+	cghi	%r5,4096            # Switch to mvcle for copies >1MB
 	jh      __memcpy_mvcle
-.L_Z900_G5_12:
+.L_Z900_12:
 	mvc     0(256,%r1),0(%r3)
 	la      %r1,256(%r1)
 	la      %r3,256(%r3)
-	BRCTG   %r5,.L_Z900_G5_12
-	j       .L_Z900_G5_3
-.L_Z900_G5_15:
+	brctg   %r5,.L_Z900_12
+	j       .L_Z900_3
+.L_Z900_15:
 	mvc     0(1,%r1),0(%r3)
-END(MEMCPY_Z900_G5)
-#endif /* HAVE_MEMCPY_Z900_G5  */
+END(MEMCPY_Z900)
+#endif /* HAVE_MEMCPY_Z900  */
 
 ENTRY(__memcpy_mvcle)
 	# Using as standalone function will result in unexpected
 	# results since the length field is incremented by 1 in order to
 	# compensate the changes already done in the functions above.
-	LGR     %r0,%r2             # backup return dest [ + n ]
-	AGHI    %r4,1               # length + 1
+	lgr     %r0,%r2             # backup return dest [ + n ]
+	aghi    %r4,1               # length + 1
 	LGR     %r5,%r4             # source length
 	LGR     %r4,%r3             # source address
 	LGR     %r2,%r1             # destination address
@@ -112,20 +78,13 @@ ENTRY(__memcpy_mvcle)
 .L_MVCLE_1:
 	mvcle   %r2,%r4,0           # that's it, MVCLE is your friend
 	jo      .L_MVCLE_1
-	LGR     %r2,%r0             # return destination address
+	lgr     %r2,%r0             # return destination address
 	br      %r14
 END(__memcpy_mvcle)
-
-#undef LTGR
-#undef CGHI
-#undef LGR
-#undef AGHI
-#undef BRCTG
 
 #if HAVE_MEMCPY_Z10
 ENTRY(MEMPCPY_Z10)
 	.machine "z10"
-	.machinemode "zarch_nohighgprs"
 	lgr     %r1,%r2         # Use as dest
 	la      %r2,0(%r4,%r2)  # Return dest + n
 	j	.L_Z10_start
@@ -133,12 +92,8 @@ END(MEMPCPY_Z10)
 
 ENTRY(MEMCPY_Z10)
 	.machine "z10"
-	.machinemode "zarch_nohighgprs"
 	lgr     %r1,%r2         # r1: Use as dest ; r2: Return dest
 .L_Z10_start:
-# if !defined __s390x__
-	llgfr	%r4,%r4
-# endif /* !defined __s390x__  */
 	cgije   %r4,0,.L_Z10_4
 	aghi    %r4,-1
 	srlg    %r5,%r4,8
@@ -166,7 +121,6 @@ END(MEMCPY_Z10)
 #if HAVE_MEMCPY_Z196
 ENTRY(MEMPCPY_Z196)
 	.machine "z196"
-	.machinemode "zarch_nohighgprs"
 	lgr     %r1,%r2         # Use as dest
 	la      %r2,0(%r4,%r2)  # Return dest + n
 	j	.L_Z196_start
@@ -174,12 +128,8 @@ END(MEMPCPY_Z196)
 
 ENTRY(MEMCPY_Z196)
 	.machine "z196"
-	.machinemode "zarch_nohighgprs"
 	lgr     %r1,%r2         # r1: Use as dest ; r2: Return dest
 .L_Z196_start:
-# if !defined __s390x__
-	llgfr	%r4,%r4
-# endif /* !defined __s390x__  */
 	ltgr    %r4,%r4
 	je      .L_Z196_4
 .L_Z196_start2:
@@ -220,13 +170,6 @@ END(MEMCPY_Z196)
 #if HAVE_MEMMOVE_Z13
 ENTRY(MEMMOVE_Z13)
 	.machine "z13"
-	.machinemode "zarch_nohighgprs"
-# if !defined __s390x__
-	/* Note: The 31bit dst and src pointers are prefixed with zeroes.  */
-	llgfr	%r4,%r4
-	llgfr	%r3,%r3
-	llgfr	%r2,%r2
-# endif /* !defined __s390x__ */
 	sgrk	%r0,%r2,%r3
 	clgijh	%r4,16,.L_MEMMOVE_Z13_LARGE
 	aghik	%r5,%r4,-1
@@ -289,13 +232,6 @@ END(MEMMOVE_Z13)
 #if HAVE_MEMMOVE_ARCH13
 ENTRY(MEMMOVE_ARCH13)
 	.machine "arch13"
-	.machinemode "zarch_nohighgprs"
-# if ! defined __s390x__
-	/* Note: The 31bit dst and src pointers are prefixed with zeroes.  */
-	llgfr	%r4,%r4
-	llgfr	%r3,%r3
-	llgfr	%r2,%r2
-# endif /* ! defined __s390x__ */
 	sgrk	%r5,%r2,%r3
 	aghik	%r0,%r4,-1	/* Both vstl and mvcrl needs highest index.  */
 	clgijh	%r4,16,.L_MEMMOVE_ARCH13_LARGE

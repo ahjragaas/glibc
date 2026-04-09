@@ -23,8 +23,8 @@
 # undef memcmp
 # include <ifunc-resolve.h>
 
-# if HAVE_MEMCMP_Z900_G5
-extern __typeof (__redirect_memcmp) MEMCMP_Z900_G5 attribute_hidden;
+# if HAVE_MEMCMP_Z900
+extern __typeof (__redirect_memcmp) MEMCMP_Z900 attribute_hidden;
 # endif
 
 # if HAVE_MEMCMP_Z10

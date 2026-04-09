@@ -1,4 +1,4 @@
-/* Vector optimized 32/64 bit S/390 version of strcmp.
+/* Vector optimized 64 bit S/390 version of strcmp.
    Copyright (C) 2015-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -39,7 +39,6 @@
 */
 ENTRY(STRCMP_Z13)
 	.machine "z13"
-	.machinemode "zarch_nohighgprs"
 
 	lghi	%r5,0		/* current_len = 0.  */
 
@@ -113,7 +112,7 @@ END(STRCMP_Z13)
 strong_alias (STRCMP_Z13, strcmp)
 # endif
 
-# if ! HAVE_STRCMP_Z900_G5 && defined SHARED && IS_IN (libc)
+# if ! HAVE_STRCMP_Z900 && defined SHARED && IS_IN (libc)
 strong_alias (STRCMP_Z13, __GI_strcmp)
 # endif
 #endif

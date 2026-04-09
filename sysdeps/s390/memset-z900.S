@@ -1,4 +1,4 @@
-/* Set a block of memory to some byte value.  31/64 bit S/390 version.
+/* Set a block of memory to some byte value.  64 bit S/390 version.
    Copyright (C) 2001-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -28,75 +28,39 @@
 
        .text
 
-#if HAVE_MEMSET_Z900_G5
-# if defined __s390x__
-#  define LTGR	ltgr
-#  define CGHI	cghi
-#  define LGR	lgr
-#  define AGHI	aghi
-#  define BRCTG	brctg
-# else
-#  define LTGR	ltr
-#  define CGHI	chi
-#  define LGR	lr
-#  define AGHI	ahi
-#  define BRCTG	brct
-# endif /* ! defined __s390x__  */
-
-ENTRY(MEMSET_Z900_G5)
-.L_Z900_G5_start:
-#if defined __s390x__
+#if HAVE_MEMSET_Z900
+ENTRY(MEMSET_Z900)
+.L_Z900_start:
 	.machine "z900"
-#else
-	.machine "g5"
-#endif /* ! defined __s390x__  */
-	LTGR    %r4,%r4
-	je      .L_Z900_G5_4
+	ltgr    %r4,%r4
+	je      .L_Z900_4
 	stc     %r3,0(%r2)
-	CGHI    %r4,1
-	LGR     %r1,%r2
-	je      .L_Z900_G5_4
-	AGHI    %r4,-2
-#if defined __s390x__
-	larl    %r5,.L_Z900_G5_18
+	cghi    %r4,1
+	lgr     %r1,%r2
+	je      .L_Z900_4
+	aghi    %r4,-2
+	larl    %r5,.L_Z900_18
 	srlg    %r3,%r4,8
-# define Z900_G5_EX_D 0
-#else
-	basr    %r5,0
-.L_Z900_G5_19:
-# define Z900_G5_EX_D .L_Z900_G5_18-.L_Z900_G5_19
-	lr      %r3,%r4
-	srl     %r3,8
-#endif /* ! defined __s390x__  */
-	LTGR    %r3,%r3
-	jne     .L_Z900_G5_14
-.L_Z900_G5_3:
-	ex      %r4,Z900_G5_EX_D(%r5)
-.L_Z900_G5_4:
+	ltgr    %r3,%r3
+	jne     .L_Z900_14
+.L_Z900_3:
+	ex      %r4,0(%r5)
+.L_Z900_4:
 	br      %r14
-.L_Z900_G5_14:
+.L_Z900_14:
 	mvc     1(256,%r1),0(%r1)
 	la      %r1,256(%r1)
-	BRCTG   %r3,.L_Z900_G5_14
-	j       .L_Z900_G5_3
-.L_Z900_G5_18:
+	brctg   %r3,.L_Z900_14
+	j       .L_Z900_3
+.L_Z900_18:
 	mvc     1(1,%r1),0(%r1)
-END(MEMSET_Z900_G5)
-# undef LTGR
-# undef CGHI
-# undef LGR
-# undef AGHI
-# undef BRCTG
-#endif /*  HAVE_MEMSET_Z900_G5  */
+END(MEMSET_Z900)
+#endif /*  HAVE_MEMSET_Z900  */
 
 #if HAVE_MEMSET_Z10
 ENTRY(MEMSET_Z10)
 .L_Z10_start:
 	.machine "z10"
-	.machinemode "zarch_nohighgprs"
-# if !defined __s390x__
-	llgfr	%r4,%r4
-# endif /* !defined __s390x__  */
 	cgije   %r4,0,.L_Z10_4
 	stc     %r3,0(%r2)
 	lgr     %r1,%r2
@@ -126,10 +90,6 @@ END(MEMSET_Z10)
 ENTRY(MEMSET_Z196)
 .L_Z196_start:
 	.machine "z196"
-	.machinemode "zarch_nohighgprs"
-# if !defined __s390x__
-	llgfr	%r4,%r4
-# endif /* !defined __s390x__  */
 	clgfi	%r4,1
 	jl	.L_Z196_4	    # n == 0
 	stc     %r3,0(%r2)

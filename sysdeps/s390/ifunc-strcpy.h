@@ -31,18 +31,18 @@
 
 #if defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
 # define STRCPY_DEFAULT		STRCPY_Z13
-# define HAVE_STRCPY_Z900_G5	0
+# define HAVE_STRCPY_Z900	0
 # define HAVE_STRCPY_Z13	1
 #else
-# define STRCPY_DEFAULT		STRCPY_Z900_G5
-# define HAVE_STRCPY_Z900_G5	1
+# define STRCPY_DEFAULT		STRCPY_Z900
+# define HAVE_STRCPY_Z900	1
 # define HAVE_STRCPY_Z13	HAVE_STRCPY_IFUNC_AND_VX_SUPPORT
 #endif
 
-#if HAVE_STRCPY_Z900_G5
-# define STRCPY_Z900_G5		__strcpy_default
+#if HAVE_STRCPY_Z900
+# define STRCPY_Z900		__strcpy_default
 #else
-# define STRCPY_Z900_G5		NULL
+# define STRCPY_Z900		NULL
 #endif
 
 #if HAVE_STRCPY_Z13

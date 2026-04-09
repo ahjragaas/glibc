@@ -69,14 +69,9 @@
 #define VDSO_HASH  123718585
 
 /* List of system calls which are supported as vsyscalls.  */
-#ifdef __s390x__
 #define HAVE_CLOCK_GETRES64_VSYSCALL	"__kernel_clock_getres"
 #define HAVE_CLOCK_GETTIME64_VSYSCALL	"__kernel_clock_gettime"
 #define HAVE_GETRANDOM_VSYSCALL		"__kernel_getrandom"
-#else
-#define HAVE_CLOCK_GETRES_VSYSCALL	"__kernel_clock_getres"
-#define HAVE_CLOCK_GETTIME_VSYSCALL	"__kernel_clock_gettime"
-#endif
 #define HAVE_GETTIMEOFDAY_VSYSCALL	"__kernel_gettimeofday"
 #define HAVE_GETCPU_VSYSCALL		"__kernel_getcpu"
 

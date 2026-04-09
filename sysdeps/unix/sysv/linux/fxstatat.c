@@ -43,7 +43,7 @@ __fxstatat (int vers, int fd, const char *file, struct stat *st, int flag)
   return INLINE_SYSCALL_ERROR_RETURN_VALUE (EINVAL);
 #else
   /* Old kABIs with old non-LFS support, e.g. arm, i386, hppa, m68k, mips32,
-     microblaze, s390, sh, powerpc32, and sparc32.  */
+     microblaze, sh, powerpc32, and sparc32.  */
   struct stat64 st64;
   int r = INLINE_SYSCALL_CALL (fstatat64, fd, file, &st64, flag);
   return r ?: __xstat32_conv (vers, &st64, st);

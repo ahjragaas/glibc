@@ -42,8 +42,8 @@ static int (*readdir64_r_compat) (DIR *, struct __old_dirent64 *,
 static void __attribute__ ((constructor))
 init (void)
 {
-  /* These compat symbols exists on alpha, i386, m67k , powerpc, s390,
-     sparc. at the same GLIBC_2.1 version. */
+  /* These compat symbols exists on alpha, i386, m67k , powerpc, sparc
+     at the same GLIBC_2.1 version. */
   readdir64_compat = dlvsym (RTLD_DEFAULT, "readdir64", "GLIBC_2.1");
   readdir64_r_compat = dlvsym (RTLD_DEFAULT, "readdir64_r", "GLIBC_2.1");
 }

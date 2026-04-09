@@ -21,15 +21,6 @@
 # include <math.h>
 # include <libm-alias-float.h>
 
-/* The sizeof (long int) differs between s390x (8byte) and s390 (4byte).
-   Thus we need different instructions as the target size is encoded there.
-   Note: On s390 this instruction is only used if build with -mzarch.  */
-# ifdef __s390x__
-#  define INSN "cgebra"
-# else
-#  define INSN "cfebra"
-# endif
-
 long int
 __lroundf (float x)
 {
@@ -37,7 +28,7 @@ __lroundf (float x)
   /* The z196 zarch "convert to fixed" (cgebra) instruction is rounding
      x to the nearest integer with "ties away from 0" rounding mode
      (M3-field: 1) where inexact exceptions are suppressed (M4-field: 4).  */
-  __asm__ (INSN " %0,1,%1,4" : "=d" (y) : "f" (x) : "cc");
+  __asm__ ("cgebra %0,1,%1,4" : "=d" (y) : "f" (x) : "cc");
   return y;
 }
 libm_alias_float (__lround, lround)

@@ -24,35 +24,27 @@
 #include "sysdep.h"
 #include "asm-syntax.h"
 
-#if HAVE_STRCMP_Z900_G5
-# if defined __s390x__
-#  define SLGR	slgr
-#  define LGHI	lghi
-# else
-#  define SLGR	slr
-#  define LGHI	lhi
-# endif /* ! defined __s390x__  */
-
+#if HAVE_STRCMP_Z900
 	.text
-ENTRY(STRCMP_Z900_G5)
-	SLGR   %r0,%r0
+ENTRY(STRCMP_Z900)
+	slgr   %r0,%r0
 0:	clst  %r2,%r3
 	jo    0b
 	jp    1f
 	jm    2f
-	SLGR  %r2,%r2
+	slgr  %r2,%r2
 	br    %r14
-1:	LGHI  %r2,1
+1:	lghi  %r2,1
 	br    %r14
-2:	LGHI  %r2,-1
+2:	lghi  %r2,-1
 	br    %r14
-END(STRCMP_Z900_G5)
+END(STRCMP_Z900)
 
 # if ! HAVE_STRCMP_IFUNC
-strong_alias (STRCMP_Z900_G5, strcmp)
+strong_alias (STRCMP_Z900, strcmp)
 # endif
 
 # if defined SHARED && IS_IN (libc)
-strong_alias (STRCMP_Z900_G5, __GI_strcmp)
+strong_alias (STRCMP_Z900, __GI_strcmp)
 # endif
 #endif

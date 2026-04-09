@@ -44,10 +44,6 @@ typedef struct
   void *__private_ss;
 } tcbhead_t;
 
-# ifndef __s390x__
-#  define TLS_MULTIPLE_THREADS_IN_TCB 1
-# endif
-
 #else /* __ASSEMBLER__ */
 # include <tcb-offsets.h>
 #endif

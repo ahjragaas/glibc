@@ -30,8 +30,7 @@
   ((void *) (address) < (void *) demangle ((jmpbuf)->__gregs[__JB_GPR15]))
 
 
-/* On s390{,x}, CFA is always 96 (resp. 160) bytes above actual
-   %r15.  */
+/* On s390x, CFA is always 160 bytes above actual %r15.  */
 #define _JMPBUF_CFA_UNWINDS_ADJ(_jmpbuf, _context, _adj) \
   _JMPBUF_UNWINDS_ADJ (_jmpbuf,					\
 		       (void *) (_Unwind_GetCFA (_context)	\

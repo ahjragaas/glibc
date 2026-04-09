@@ -34,9 +34,7 @@ strong_alias (SINGLE_NAME (TO_LOOP_DEFAULT), SINGLE_NAME (TO_LOOP))
 s390_libc_ifunc_expr (FROM_LOOP_DEFAULT, FROM_LOOP,
 		      (HAVE_FROM_VX && (hwcap & HWCAP_S390_VX))
 		      ? FROM_LOOP_VX
-		      : (HAVE_FROM_CU && (hwcap & HWCAP_S390_ZARCH
-					  && hwcap & HWCAP_S390_HIGH_GPRS
-					  && hwcap & HWCAP_S390_ETF3EH))
+		      : (HAVE_FROM_CU && (hwcap & HWCAP_S390_ETF3EH))
 			? FROM_LOOP_CU
 			: FROM_LOOP_DEFAULT);
 

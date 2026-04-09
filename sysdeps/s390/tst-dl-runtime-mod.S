@@ -20,11 +20,7 @@
 	.type	r0x2, @function
 r0x2:
 	.cfi_startproc
-#if defined (__s390x__)
 	agr %r0,%r0
-#else
-	ar %r0,%r0
-#endif
 	br %r14
 	.cfi_endproc
 	.size	r0x2, .-r0x2

@@ -23,8 +23,8 @@
 # undef memset
 # include <ifunc-resolve.h>
 
-# if HAVE_MEMSET_Z900_G5
-extern __typeof (__redirect_memset) MEMSET_Z900_G5 attribute_hidden;
+# if HAVE_MEMSET_Z900
+extern __typeof (__redirect_memset) MEMSET_Z900 attribute_hidden;
 # endif
 
 # if HAVE_MEMSET_Z10

@@ -24,8 +24,8 @@
 # undef memcpy
 # include <ifunc-resolve.h>
 
-# if HAVE_MEMCPY_Z900_G5
-extern __typeof (__redirect_memcpy) MEMCPY_Z900_G5 attribute_hidden;
+# if HAVE_MEMCPY_Z900
+extern __typeof (__redirect_memcpy) MEMCPY_Z900 attribute_hidden;
 # endif
 
 # if HAVE_MEMCPY_Z10

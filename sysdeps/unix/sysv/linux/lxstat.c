@@ -44,7 +44,7 @@ __lxstat (int vers, const char *name, struct stat *buf)
 	return r ?: stat_overflow (buf);
 # else
 	/* Old kABIs with old non-LFS support, e.g. arm, i386, hppa, m68k,
-	   microblaze, s390, sh, powerpc, and sparc.  */
+	   microblaze, sh, powerpc, and sparc.  */
 	return INLINE_SYSCALL_CALL (lstat, name, buf);
 # endif
       }

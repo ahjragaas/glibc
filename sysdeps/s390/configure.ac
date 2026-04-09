@@ -6,7 +6,6 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 void testvecinsn ()
 {
     __asm__ (".machine \"z13\" \n\t"
-	     ".machinemode \"zarch_nohighgprs\" \n\t"
 	     "vistrbs %%v16,%%v17 \n\t"
 	     "locghie %%r1,0" : :);
 }
@@ -43,7 +42,6 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 void testinsn (char *buf)
 {
     __asm__ (".machine \"arch13\" \n\t"
-	     ".machinemode \"zarch_nohighgprs\" \n\t"
 	     "lghi %%r0,16 \n\t"
 	     "mvcrl 0(%0),32(%0) \n\t"
 	     "vstrs %%v20,%%v20,%%v20,%%v20,0,2"

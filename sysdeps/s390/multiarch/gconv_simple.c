@@ -77,11 +77,6 @@
 # undef __gconv_transform_internal_ucs2reverse
 
 /* Now define the functions with vector support.  */
-# if defined __s390x__
-#  define CONVERT_32BIT_SIZE_T(REG)
-# else
-#  define CONVERT_32BIT_SIZE_T(REG) "llgfr %" #REG ",%" #REG "\n\t"
-# endif
 
 /* Convert from ISO 646-IRV to the internal (UCS4-like) format.  */
 # define DEFINE_INIT		0
@@ -125,8 +120,6 @@
     size_t loop_count, tmp;						\
     __asm__ volatile (".machine push\n\t"				\
 		      ".machine \"z13\"\n\t"				\
-		      ".machinemode \"zarch_nohighgprs\"\n\t"		\
-		      CONVERT_32BIT_SIZE_T ([R_LEN])			\
 		      "    vrepib %%v30,0x7f\n\t" /* For compare > 0x7f.  */ \
 		      "    srlg %[R_LI],%[R_LEN],4\n\t"			\
 		      "    vrepib %%v31,0x20\n\t"			\
@@ -257,8 +250,6 @@ ICONV_VX_IFUNC (__gconv_transform_ascii_internal)
     size_t loop_count, tmp, tmp2;					\
     __asm__ volatile (".machine push\n\t"				\
 		      ".machine \"z13\"\n\t"				\
-		      ".machinemode \"zarch_nohighgprs\"\n\t"		\
-		      CONVERT_32BIT_SIZE_T ([R_LEN])			\
 		      /* Setup to check for ch > 0x7f.  */		\
 		      "    vzero %%v21\n\t"				\
 		      "    srlg %[R_LI],%[R_LEN],4\n\t"			\
@@ -414,8 +405,6 @@ ICONV_VX_NAME (internal_ucs4le_loop) (struct __gconv_step *step,
   size_t loop_count;
   __asm__ volatile (".machine push\n\t"
 		    ".machine \"z13\"\n\t"
-		    ".machinemode \"zarch_nohighgprs\"\n\t"
-		    CONVERT_32BIT_SIZE_T ([R_LEN])
 		    "    bras %[R_LI],1f\n\t"
 		    /* Vector permute mask:  */
 		    "    .long 0x03020100,0x7060504,0x0B0A0908,0x0F0E0D0C\n\t"
@@ -517,8 +506,6 @@ ICONV_VX_NAME (ucs4_internal_loop) (struct __gconv_step *step,
       len = MIN (inend - inptr, outend - outptr) / 4;
       __asm__ volatile (".machine push\n\t"
 			".machine \"z13\"\n\t"
-			".machinemode \"zarch_nohighgprs\"\n\t"
-			CONVERT_32BIT_SIZE_T ([R_LEN])
 			/* Setup to check for ch > 0x7fffffff.  */
 			"    larl %[R_LI],9f\n\t"
 			"    vlm %%v20,%%v21,0(%[R_LI])\n\t"
@@ -644,8 +631,6 @@ ICONV_VX_NAME (ucs4le_internal_loop) (struct __gconv_step *step,
       len = MIN (inend - inptr, outend - outptr) / 4;
       __asm__ volatile (".machine push\n\t"
 			".machine \"z13\"\n\t"
-			".machinemode \"zarch_nohighgprs\"\n\t"
-			CONVERT_32BIT_SIZE_T ([R_LEN])
 			/* Setup to check for ch > 0x7fffffff.  */
 			"    larl %[R_LI],9f\n\t"
 			"    vlm %%v20,%%v22,0(%[R_LI])\n\t"
@@ -783,8 +768,6 @@ ICONV_VX_IFUNC (__gconv_transform_ucs4le_internal)
     len = MIN ((inend - inptr) / 2, (outend - outptr) / 4);		\
     __asm__ volatile (".machine push\n\t"				\
 		      ".machine \"z13\"\n\t"				\
-		      ".machinemode \"zarch_nohighgprs\"\n\t"		\
-		      CONVERT_32BIT_SIZE_T ([R_LEN])			\
 		      /* Setup to check for ch >= 0xd800 && ch < 0xe000.  */ \
 		      "    larl %[R_TMP],9f\n\t"			\
 		      "    vlm %%v20,%%v21,0(%[R_TMP])\n\t"		\
@@ -907,8 +890,6 @@ ICONV_VX_IFUNC (__gconv_transform_ucs2_internal)
     len = MIN ((inend - inptr) / 2, (outend - outptr) / 4);		\
     __asm__ volatile (".machine push\n\t"				\
 		      ".machine \"z13\"\n\t"				\
-		      ".machinemode \"zarch_nohighgprs\"\n\t"		\
-		      CONVERT_32BIT_SIZE_T ([R_LEN])			\
 		      /* Setup to check for ch >= 0xd800 && ch < 0xe000.  */ \
 		      "    larl %[R_TMP],9f\n\t"			\
 		      "    vlm %%v20,%%v22,0(%[R_TMP])\n\t"		\
@@ -1051,8 +1032,6 @@ ICONV_VX_IFUNC (__gconv_transform_ucs2reverse_internal)
 	  loop_count = (outend - outptr) / 16;				\
 	__asm__ volatile (".machine push\n\t"				\
 			  ".machine \"z13\"\n\t"			\
-			  ".machinemode \"zarch_nohighgprs\"\n\t"	\
-			  CONVERT_32BIT_SIZE_T ([R_LI])			\
 			  "    larl %[R_I],3f\n\t"			\
 			  "    vlm %%v20,%%v23,0(%[R_I])\n\t"		\
 			  "0:  \n\t"					\
@@ -1183,8 +1162,6 @@ ICONV_VX_IFUNC (__gconv_transform_internal_ucs2)
 	  loop_count = (outend - outptr) / 16;				\
 	__asm__ volatile (".machine push\n\t"				\
 			  ".machine \"z13\"\n\t"			\
-			  ".machinemode \"zarch_nohighgprs\"\n\t"	\
-			  CONVERT_32BIT_SIZE_T ([R_LI])			\
 			  "    larl %[R_I],3f\n\t"			\
 			  "    vlm %%v20,%%v24,0(%[R_I])\n\t"		\
 			  "0:  \n\t"					\

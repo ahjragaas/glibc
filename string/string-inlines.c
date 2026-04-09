@@ -208,7 +208,7 @@ __old_strpbrk_c3 (const char *__s, int __accept1, int __accept2, int __accept3)
 }
 compat_symbol (libc, __old_strpbrk_c3, __strpbrk_c3, GLIBC_2_1_1);
 
-# if defined __mc68020__ || defined __s390__ || defined __i386__
+# if defined __mc68020__ || defined __s390x__ || defined __i386__
 #  define _STRING_INLINE_unaligned 1
 # else
 #  define _STRING_INLINE_unaligned 0

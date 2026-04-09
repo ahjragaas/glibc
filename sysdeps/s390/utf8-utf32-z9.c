@@ -59,12 +59,6 @@
 # define ASM_CLOBBER_VR(NR)
 #endif
 
-#if defined __s390x__
-# define CONVERT_32BIT_SIZE_T(REG)
-#else
-# define CONVERT_32BIT_SIZE_T(REG) "llgfr %" #REG ",%" #REG "\n\t"
-#endif
-
 /* Defines for skeleton.c.  */
 #define DEFINE_INIT		0
 #define DEFINE_FINI		0
@@ -176,7 +170,6 @@ gconv_end (struct __gconv_step *data)
 									\
     __asm__ __volatile__ (".machine push       \n\t"			\
 			  ".machine \"z9-109\" \n\t"			\
-			  ".machinemode \"zarch_nohighgprs\"\n\t"	\
 			  "0: " INSTRUCTION "  \n\t"			\
 			  ".machine pop        \n\t"			\
 			  "   jo     0b        \n\t"			\
@@ -480,11 +473,8 @@ gconv_end (struct __gconv_step *data)
     unsigned long tmp, tmp2, tmp3;					\
     asm volatile (".machine push\n\t"					\
 		  ".machine \"z13\"\n\t"				\
-		  ".machinemode \"zarch_nohighgprs\"\n\t"		\
 		  "    vrepib %%v30,0x7f\n\t" /* For compare > 0x7f.  */ \
 		  "    vrepib %%v31,0x20\n\t"				\
-		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
-		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-8 chars <=0x7f.  */		\
 		  "0:  clgijl %[R_INLEN],16,20f\n\t"			\
 		  "    clgijl %[R_OUTLEN],64,20f\n\t"			\
@@ -691,13 +681,10 @@ gconv_end (struct __gconv_step *data)
     unsigned long tmp, tmp2, tmp3;					\
     asm volatile (".machine push\n\t"					\
 		  ".machine \"z13\"\n\t"				\
-		  ".machinemode \"zarch_nohighgprs\"\n\t"		\
 		  "    vleif %%v20,127,0\n\t"   /* element 0: 127  */	\
 		  "    vzero %%v21\n\t"					\
 		  "    vleih %%v21,8192,0\n\t"  /* element 0:   >  */	\
 		  "    vleih %%v21,-8192,2\n\t" /* element 1: =<>  */	\
-		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
-		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-32 chars <=0x7f.  */	\
 		  "0:  clgijl %[R_INLEN],64,2f\n\t"			\
 		  "    clgijl %[R_OUTLEN],16,2f\n\t"			\
@@ -869,13 +856,10 @@ gconv_end (struct __gconv_step *data)
     unsigned long tmp, tmp2;						\
     asm volatile (".machine push\n\t"					\
 		  ".machine \"z13\"\n\t"				\
-		  ".machinemode \"zarch_nohighgprs\"\n\t"		\
 		  "    vleif %%v20,127,0\n\t"   /* element 0: 127  */	\
 		  "    vzero %%v21\n\t"					\
 		  "    vleih %%v21,8192,0\n\t"  /* element 0:   >  */	\
 		  "    vleih %%v21,-8192,2\n\t" /* element 1: =<>  */	\
-		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
-		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-32 chars <= 0x7f.  */	\
 		  "0:  clgijl %[R_INLEN],64,20f\n\t"			\
 		  "    clgijl %[R_OUTLEN],16,20f\n\t"			\

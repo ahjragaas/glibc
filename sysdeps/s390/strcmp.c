@@ -26,8 +26,8 @@
 # include <ifunc-resolve.h>
 # undef strcmp
 
-# if HAVE_STRCMP_Z900_G5
-extern __typeof (__redirect_strcmp) STRCMP_Z900_G5 attribute_hidden;
+# if HAVE_STRCMP_Z900
+extern __typeof (__redirect_strcmp) STRCMP_Z900 attribute_hidden;
 # endif
 
 # if HAVE_STRCMP_Z13

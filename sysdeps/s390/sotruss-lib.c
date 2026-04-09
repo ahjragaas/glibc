@@ -22,24 +22,12 @@
 
 #include <elf/sotruss-lib.c>
 
-#if __ELF_NATIVE_CLASS == 32
-# define la_s390_gnu_pltenter	la_s390_32_gnu_pltenter
-# define la_s390_gnu_pltexit	la_s390_32_gnu_pltexit
-# define La_s390_regs		La_s390_32_regs
-# define La_s390_retval		La_s390_32_retval
-#else
-# define la_s390_gnu_pltenter	la_s390_64_gnu_pltenter
-# define la_s390_gnu_pltexit	la_s390_64_gnu_pltexit
-# define La_s390_regs		La_s390_64_regs
-# define La_s390_retval		La_s390_64_retval
-#endif
-
-ElfW(Addr)
-la_s390_gnu_pltenter (ElfW(Sym) *sym,
-		      unsigned int ndx __attribute__ ((unused)),
-		      uintptr_t *refcook, uintptr_t *defcook,
-		      La_s390_regs *regs, unsigned int *flags,
-		      const char *symname, long int *framesizep)
+Elf64_Addr
+la_s390_64_gnu_pltenter (Elf64_Sym *sym,
+			 unsigned int ndx __attribute__ ((unused)),
+			 uintptr_t *refcook, uintptr_t *defcook,
+			 La_s390_64_regs *regs, unsigned int *flags,
+			 const char *symname, long int *framesizep)
 {
   print_enter (refcook, defcook, symname,
 	       regs->lr_r2, regs->lr_r3, regs->lr_r4, *flags);
@@ -51,10 +39,11 @@ la_s390_gnu_pltenter (ElfW(Sym) *sym,
 }
 
 unsigned int
-la_s390_gnu_pltexit (ElfW(Sym) *sym, unsigned int ndx, uintptr_t *refcook,
-		     uintptr_t *defcook,
-		     const struct La_s390_regs *inregs,
-		     struct La_s390_retval *outregs, const char *symname)
+la_s390_64_gnu_pltexit (Elf64_Sym *sym, unsigned int ndx, uintptr_t *refcook,
+			uintptr_t *defcook,
+			const struct La_s390_64_regs *inregs,
+			struct La_s390_64_retval *outregs,
+			const char *symname)
 {
   print_exit (refcook, defcook, symname, outregs->lrv_r2);
 

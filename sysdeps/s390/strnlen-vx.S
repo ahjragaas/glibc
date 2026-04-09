@@ -1,4 +1,4 @@
-/* Vector optimized 32/64 bit S/390 version of strnlen.
+/* Vector optimized 64 bit S/390 version of strnlen.
    Copyright (C) 2015-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -38,11 +38,6 @@
 */
 ENTRY(STRNLEN_Z13)
 	.machine "z13"
-	.machinemode "zarch_nohighgprs"
-
-# if !defined __s390x__
-	llgfr	%r3,%r3
-# endif /* !defined __s390x__ */
 
 	clgfi	%r3,0		/* if maxlen == 0, return 0.  */
 	locgre	%r2,%r3

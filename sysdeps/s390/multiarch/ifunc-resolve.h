@@ -1,5 +1,5 @@
 /* IFUNC resolver function for CPU specific functions.
-   32/64 bit S/390 version.
+   64 bit S/390 version.
    Copyright (C) 2015-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

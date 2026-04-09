@@ -1,4 +1,4 @@
-/* Get system parameters, e.g. cache information.  S390/S390x version.
+/* Get system parameters, e.g. cache information.  S390x version.
    Copyright (C) 2015-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -50,14 +50,9 @@ get_cache_info (int level, int attr, int type)
 
   /* Check if ecag-instruction is available.
      ecag - extract CPU attribute (only in zarch; arch >= z10; in as 2.24)  */
-  if (!(features->hwcap & HWCAP_S390_STFLE)
-#if !defined __s390x__
-      || !(features->hwcap & HWCAP_S390_ZARCH)
-      || !(features->hwcap & HWCAP_S390_HIGH_GPRS)
-#endif /* !__s390x__ */
-      )
+  if (!(features->hwcap & HWCAP_S390_STFLE))
     {
-      /* stfle (or zarch, high-gprs on s390-32) is not available.
+      /* stfle is not available.
 	 We are on an old machine. Return 256byte for LINESIZE for L1 d/i-cache,
 	 otherwise 0.  */
       if (level == 1 && attr == CACHE_ATTR_LINESIZE)
@@ -81,7 +76,6 @@ get_cache_info (int level, int attr, int type)
   arg = (CACHE_LEVEL_MAX - level) * 8;
   __asm__ __volatile__ (".machine push\n\t"
 			".machine \"z10\"\n\t"
-			".machinemode \"zarch_nohighgprs\"\n\t"
 			"ecag %0,%%r0,0\n\t"   /* returns 64bit unsigned integer.  */
 			"srlg %0,%0,0(%1)\n\t" /* right align 8bit cache info field.  */
 			".machine pop"
@@ -97,7 +91,6 @@ get_cache_info (int level, int attr, int type)
   cmd = (attr << 4) | ((level - 1) << 1) | type;
   __asm__ __volatile__ (".machine push\n\t"
 			".machine \"z10\"\n\t"
-			".machinemode \"zarch_nohighgprs\"\n\t"
 			"ecag %0,%%r0,0(%1)\n\t"
 			".machine pop"
 			: "=d" (val)

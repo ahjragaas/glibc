@@ -32,11 +32,7 @@
    __NR_fadvise64_64 (without the alignment argument required for the ABI).
 
    Third option will be used by mips o32.  Mips will use a 7 argument
-   syscall with __NR_fadvise64.
-
-   s390 implements fadvice64_64 using a specific struct with arguments
-   packed inside.  This is the only implementation handled in arch-specific
-   code.  */
+   syscall with __NR_fadvise64.  */
 
 int
 posix_fadvise (int fd, off_t offset, off_t len, int advise)

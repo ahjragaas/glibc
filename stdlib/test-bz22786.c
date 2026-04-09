@@ -46,9 +46,7 @@ do_test (void)
   if (path == NULL)
     {
       printf ("Repeated allocation (%zu bytes): %m\n", path_len);
-      /* On 31-bit s390 the malloc will always fail as we do not have
-	 so much memory, and we want to mark the test unsupported.
-	 Likewise on systems with little physical memory the test will
+      /* On systems with little physical memory the test will
 	 fail and should be unsupported.  */
       return EXIT_UNSUPPORTED;
     }

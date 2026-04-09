@@ -1,4 +1,4 @@
-/* Enumerate available IFUNC implementations of a function. s390/s390x version.
+/* Enumerate available IFUNC implementations of a function. s390x version.
    Copyright (C) 2015-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -94,8 +94,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memset,
 			      S390_IS_Z10 (stfle_bits), MEMSET_Z10)
 # endif
-# if HAVE_MEMSET_Z900_G5
-	      IFUNC_IMPL_ADD (array, i, memset, 1, MEMSET_Z900_G5)
+# if HAVE_MEMSET_Z900
+	      IFUNC_IMPL_ADD (array, i, memset, 1, MEMSET_Z900)
 # endif
 	      )
 #endif /* HAVE_MEMSET_IFUNC */
@@ -110,8 +110,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memcmp,
 			      S390_IS_Z10 (stfle_bits), MEMCMP_Z10)
 # endif
-# if HAVE_MEMCMP_Z900_G5
-	      IFUNC_IMPL_ADD (array, i, memcmp, 1, MEMCMP_Z900_G5)
+# if HAVE_MEMCMP_Z900
+	      IFUNC_IMPL_ADD (array, i, memcmp, 1, MEMCMP_Z900)
 # endif
 	      )
 #endif /* HAVE_MEMCMP_IFUNC */
@@ -126,8 +126,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, memcpy,
 			      S390_IS_Z10 (stfle_bits), MEMCPY_Z10)
 # endif
-# if HAVE_MEMCPY_Z900_G5
-	      IFUNC_IMPL_ADD (array, i, memcpy, 1, MEMCPY_Z900_G5)
+# if HAVE_MEMCPY_Z900
+	      IFUNC_IMPL_ADD (array, i, memcpy, 1, MEMCPY_Z900)
 # endif
 	      )
 
@@ -140,8 +140,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 	      IFUNC_IMPL_ADD (array, i, mempcpy,
 			      S390_IS_Z10 (stfle_bits), MEMPCPY_Z10)
 # endif
-# if HAVE_MEMCPY_Z900_G5
-	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, MEMPCPY_Z900_G5)
+# if HAVE_MEMCPY_Z900
+	      IFUNC_IMPL_ADD (array, i, mempcpy, 1, MEMPCPY_Z900)
 # endif
 	      )
 #endif /* HAVE_MEMCPY_IFUNC  */
@@ -226,8 +226,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 		IFUNC_IMPL_ADD (array, i, strcpy,
 				dl_hwcap & HWCAP_S390_VX, STRCPY_Z13)
 # endif
-# if HAVE_STRCPY_Z900_G5
-		IFUNC_IMPL_ADD (array, i, strcpy, 1, STRCPY_Z900_G5)
+# if HAVE_STRCPY_Z900
+		IFUNC_IMPL_ADD (array, i, strcpy, 1, STRCPY_Z900)
 # endif
 		)
 #endif /* HAVE_STRCPY_IFUNC  */
@@ -250,8 +250,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 		IFUNC_IMPL_ADD (array, i, strncpy,
 				dl_hwcap & HWCAP_S390_VX, STRNCPY_Z13)
 # endif
-# if HAVE_STRNCPY_Z900_G5
-		IFUNC_IMPL_ADD (array, i, strncpy, 1, STRNCPY_Z900_G5)
+# if HAVE_STRNCPY_Z900
+		IFUNC_IMPL_ADD (array, i, strncpy, 1, STRNCPY_Z900)
 # endif
 		)
 #endif /* HAVE_STRNCPY_IFUNC  */
@@ -298,8 +298,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 		IFUNC_IMPL_ADD (array, i, strcmp,
 				dl_hwcap & HWCAP_S390_VX, STRCMP_Z13)
 # endif
-# if HAVE_STRCMP_Z900_G5
-		IFUNC_IMPL_ADD (array, i, strcmp, 1, STRCMP_Z900_G5)
+# if HAVE_STRCMP_Z900
+		IFUNC_IMPL_ADD (array, i, strcmp, 1, STRCMP_Z900)
 # endif
 		)
 #endif /* HAVE_STRCMP_IFUNC  */
@@ -394,8 +394,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
 		IFUNC_IMPL_ADD (array, i, memchr,
 				dl_hwcap & HWCAP_S390_VX, MEMCHR_Z13)
 # endif
-# if HAVE_MEMCHR_Z900_G5
-		IFUNC_IMPL_ADD (array, i, memchr, 1, MEMCHR_Z900_G5)
+# if HAVE_MEMCHR_Z900
+		IFUNC_IMPL_ADD (array, i, memchr, 1, MEMCHR_Z900)
 # endif
 		)
 #endif /* HAVE_MEMCHR_IFUNC  */

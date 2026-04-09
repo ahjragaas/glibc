@@ -88,7 +88,6 @@
 	   loop_count = 16;						\
 	 __asm__ volatile (".machine push\n\t"				\
 			   ".machine \"z13\"\n\t"			\
-			   ".machinemode \"zarch_nohighgprs\"\n\t"	\
 			   "    sllk %[R_I],%[R_LI],4\n\t"		\
 			   "    ahi %[R_I],-1\n\t"			\
 			   /* Execute mvc and tr with correct len.  */	\
@@ -226,7 +225,6 @@
 	   (ch == 0 is no error, but is handled differently)  */	\
 	__asm__ volatile (".machine push\n\t"				\
 			  ".machine \"z13\"\n\t"			\
-			  ".machinemode \"zarch_nohighgprs\"\n\t"	\
 			  /* Setup to check for ch >= max.  */		\
 			  "    vzero %%v21\n\t"				\
 			  "    vleih %%v21,-24576,0\n\t" /* element 0:   >  */ \
@@ -288,7 +286,6 @@
 	       check for errors (from_ucs4[ch] == 0).  */		\
 	    __asm__ volatile (".machine push\n\t"			\
 			      ".machine \"z13\"\n\t"			\
-			      ".machinemode \"zarch_nohighgprs\"\n\t"	\
 			      "    sllk %[R_I],%[R_LI],4\n\t"		\
 			      "    ahi %[R_I],-1\n\t"			\
 			      /* Execute tr with correct len.  */	\

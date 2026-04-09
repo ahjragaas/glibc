@@ -24,8 +24,8 @@
 # undef strcpy
 # include <ifunc-resolve.h>
 
-# if HAVE_STRCPY_Z900_G5
-extern __typeof (__redirect_strcpy) STRCPY_Z900_G5 attribute_hidden;
+# if HAVE_STRCPY_Z900
+extern __typeof (__redirect_strcpy) STRCPY_Z900 attribute_hidden;
 # endif
 
 # if HAVE_STRCPY_Z13

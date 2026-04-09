@@ -31,18 +31,18 @@
 
 #if defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
 # define MEMCHR_DEFAULT		MEMCHR_Z13
-# define HAVE_MEMCHR_Z900_G5	0
+# define HAVE_MEMCHR_Z900	0
 # define HAVE_MEMCHR_Z13	1
 #else
-# define MEMCHR_DEFAULT		MEMCHR_Z900_G5
-# define HAVE_MEMCHR_Z900_G5	1
+# define MEMCHR_DEFAULT		MEMCHR_Z900
+# define HAVE_MEMCHR_Z900	1
 # define HAVE_MEMCHR_Z13	HAVE_MEMCHR_IFUNC_AND_VX_SUPPORT
 #endif
 
-#if HAVE_MEMCHR_Z900_G5
-# define MEMCHR_Z900_G5		__memchr_default
+#if HAVE_MEMCHR_Z900
+# define MEMCHR_Z900		__memchr_default
 #else
-# define MEMCHR_Z900_G5		NULL
+# define MEMCHR_Z900		NULL
 #endif
 
 #if HAVE_MEMCHR_Z13

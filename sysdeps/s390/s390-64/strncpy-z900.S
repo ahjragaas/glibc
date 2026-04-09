@@ -26,8 +26,8 @@
 #include "sysdep.h"
 #include "asm-syntax.h"
 
-#if HAVE_STRNCPY_Z900_G5
-ENTRY(STRNCPY_Z900_G5)
+#if HAVE_STRNCPY_Z900
+ENTRY(STRNCPY_Z900)
 	.text
 	stg   %r2,48(%r15)	    # save dst pointer
 	slgr  %r2,%r3		    # %r3 points to src, %r2+%r3 to dst
@@ -87,13 +87,13 @@ ENTRY(STRNCPY_Z900_G5)
 	jo    .L13
 .Lexit: lg    %r2,48(%r15)	    # return dst pointer
 	br    %r14
-END(STRNCPY_Z900_G5)
+END(STRNCPY_Z900)
 
 # if ! HAVE_STRNCPY_IFUNC
-strong_alias (STRNCPY_Z900_G5, strncpy)
+strong_alias (STRNCPY_Z900, strncpy)
 # endif
 
 # if defined SHARED && IS_IN (libc)
-strong_alias (STRNCPY_Z900_G5, __GI_strncpy)
+strong_alias (STRNCPY_Z900, __GI_strncpy)
 # endif
 #endif

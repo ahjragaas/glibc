@@ -31,18 +31,18 @@
 
 #if defined HAVE_S390_MIN_Z13_ZARCH_ASM_SUPPORT
 # define STRCMP_DEFAULT		STRCMP_Z13
-# define HAVE_STRCMP_Z900_G5	0
+# define HAVE_STRCMP_Z900	0
 # define HAVE_STRCMP_Z13	1
 #else
-# define STRCMP_DEFAULT		STRCMP_Z900_G5
-# define HAVE_STRCMP_Z900_G5	1
+# define STRCMP_DEFAULT		STRCMP_Z900
+# define HAVE_STRCMP_Z900	1
 # define HAVE_STRCMP_Z13	HAVE_STRCMP_IFUNC_AND_VX_SUPPORT
 #endif
 
-#if HAVE_STRCMP_Z900_G5
-# define STRCMP_Z900_G5		__strcmp_default
+#if HAVE_STRCMP_Z900
+# define STRCMP_Z900		__strcmp_default
 #else
-# define STRCMP_Z900_G5		NULL
+# define STRCMP_Z900		NULL
 #endif
 
 #if HAVE_STRCMP_Z13

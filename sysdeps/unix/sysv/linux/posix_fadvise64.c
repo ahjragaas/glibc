@@ -25,11 +25,7 @@ libc_hidden_proto (__posix_fadvise64_l64)
 
 /* Both arm and powerpc implements fadvise64_64 with last 'advise' argument
    just after 'fd' to avoid the requirement of implementing 7-arg syscalls.
-   ARM also defines __NR_fadvise64_64 as __NR_arm_fadvise64_64.
-
-   s390 implements fadvice64_64 using a specific struct with arguments
-   packed inside.  This is the only implementation handled in arch-specific
-   code.  */
+   ARM also defines __NR_fadvise64_64 as __NR_arm_fadvise64_64.  */
 
 #ifndef __NR_fadvise64_64
 # define __NR_fadvise64_64 __NR_fadvise64

@@ -1,4 +1,4 @@
-/* Vector optimized 32/64 bit S/390 version of wmemchr.
+/* Vector optimized 64 bit S/390 version of wmemchr.
    Copyright (C) 2015-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -41,11 +41,6 @@
 */
 ENTRY(WMEMCHR_Z13)
 	.machine "z13"
-	.machinemode "zarch_nohighgprs"
-
-# if !defined __s390x__
-	llgfr	%r4,%r4
-# endif /* !defined __s390x__ */
 
 	clgije	%r4,0,.Lnf_end	/* If len == 0 then exit.  */
 
@@ -61,13 +56,8 @@ ENTRY(WMEMCHR_Z13)
 	lghi	%r5,16		/* current_len = 16.  */
 
 	/* Check range of maxlen and convert to byte-count.  */
-# ifdef __s390x__
 	tmhh	%r4,49152	/* Test bit 0 or 1 of maxlen.  */
 	lghi	%r1,-4		/* Max byte-count is 18446744073709551612.  */
-# else
-	tmlh	%r4,49152	/* Test bit 0 or 1 of maxlen.  */
-	llilf	%r1,4294967292	/* Max byte-count is 4294967292.  */
-# endif /* !__s390x__ */
 	sllg	%r4,%r4,2	/* Convert character-count to byte-count.  */
 	locgrne	%r4,%r1		/* Use max byte-count, if bit 0/1 was one.  */
 

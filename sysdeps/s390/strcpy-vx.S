@@ -1,4 +1,4 @@
-/* Vector optimized 32/64 bit S/390 version of strcpy.
+/* Vector optimized 64 bit S/390 version of strcpy.
    Copyright (C) 2015-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -38,7 +38,6 @@
 */
 ENTRY(STRCPY_Z13)
 	.machine "z13"
-	.machinemode "zarch_nohighgprs"
 
 	vlbb	%v16,0(%r3),6	/* Load s until next 4k-byte boundary.  */
 	lcbb	%r1,0(%r3),6	/* Get bytes to 4k-byte boundary or 16.  */
@@ -103,7 +102,7 @@ END(STRCPY_Z13)
 strong_alias (STRCPY_Z13, strcpy)
 # endif
 
-# if ! HAVE_STRCPY_Z900_G5 && defined SHARED && IS_IN (libc)
+# if ! HAVE_STRCPY_Z900 && defined SHARED && IS_IN (libc)
 strong_alias (STRCPY_Z13, __GI_strcpy)
 # endif
 #endif

@@ -22,15 +22,6 @@
 # include <math_private.h>
 # include <libm-alias-ldouble.h>
 
-/* The sizeof (long int) differs between s390x (8byte) and s390 (4byte).
-   Thus we need different instructions as the target size is encoded there.
-   Note: On s390 this instruction is only used if build with -mzarch.  */
-# ifdef __s390x__
-#  define INSN "cgxbra"
-# else
-#  define INSN "cfxbra"
-# endif
-
 long int
 __lroundl (_Float128 x)
 {
@@ -38,7 +29,7 @@ __lroundl (_Float128 x)
   /* The z196 zarch "convert to fixed" (cgxbra) instruction is rounding
      x to the nearest integer with "ties away from 0" rounding mode
      (M3-field: 1) where inexact exceptions are suppressed (M4-field: 4).  */
-  __asm__ (INSN " %0,1,%1,4" : "=d" (y) : "f" (x) : "cc");
+  __asm__ ("cgxbra %0,1,%1,4" : "=d" (y) : "f" (x) : "cc");
   return y;
 }
 libm_alias_ldouble (__lround, lround)

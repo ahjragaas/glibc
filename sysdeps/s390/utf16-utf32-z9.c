@@ -49,12 +49,6 @@
 # define ASM_CLOBBER_VR(NR)
 #endif
 
-#if defined __s390x__
-# define CONVERT_32BIT_SIZE_T(REG)
-#else
-# define CONVERT_32BIT_SIZE_T(REG) "llgfr %" #REG ",%" #REG "\n\t"
-#endif
-
 /* UTF-32 big endian byte order mark.  */
 #define BOM_UTF32               0x0000feffu
 
@@ -256,12 +250,9 @@ gconv_end (struct __gconv_step *data)
     unsigned long tmp, tmp2, tmp3;					\
     asm volatile (".machine push\n\t"					\
 		  ".machine \"z13\"\n\t"				\
-		  ".machinemode \"zarch_nohighgprs\"\n\t"		\
 		  /* Setup to check for surrogates.  */			\
 		  "    larl %[R_TMP],9f\n\t"				\
 		  "    vlm %%v30,%%v31,0(%[R_TMP])\n\t"			\
-		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
-		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-16 chars <0xd800, >0xdfff.  */ \
 		  "0:  clgijl %[R_INLEN],16,2f\n\t"			\
 		  "    clgijl %[R_OUTLEN],32,2f\n\t"			\
@@ -402,12 +393,9 @@ gconv_end (struct __gconv_step *data)
     unsigned long tmp, tmp2, tmp3;					\
     asm volatile (".machine push\n\t"					\
 		  ".machine \"z13\"\n\t"				\
-		  ".machinemode \"zarch_nohighgprs\"\n\t"		\
 		  /* Setup to check for surrogates.  */			\
 		  "    larl %[R_TMP],9f\n\t"				\
 		  "    vlm %%v30,%%v31,0(%[R_TMP])\n\t"			\
-		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
-		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-16 chars <0xd800, >0xdfff.  */ \
 		  "0:  clgijl %[R_INLEN],16,20f\n\t"			\
 		  "    clgijl %[R_OUTLEN],32,20f\n\t"			\
@@ -572,12 +560,9 @@ gconv_end (struct __gconv_step *data)
     unsigned long tmp, tmp2, tmp3;					\
     asm volatile (".machine push\n\t"					\
 		  ".machine \"z13\"\n\t"				\
-		  ".machinemode \"zarch_nohighgprs\"\n\t"		\
 		  /* Setup to check for surrogates.  */			\
 		  "    larl %[R_TMP],9f\n\t"				\
 		  "    vlm %%v30,%%v31,0(%[R_TMP])\n\t"			\
-		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
-		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-32 chars			\
 		     ch < 0xd800 || (ch > 0xdfff && ch < 0x10000).  */	\
 		  "0:  clgijl %[R_INLEN],32,2f\n\t"			\
@@ -712,12 +697,9 @@ gconv_end (struct __gconv_step *data)
     unsigned long tmp, tmp2, tmp3;					\
     asm volatile (".machine push\n\t"					\
 		  ".machine \"z13\"\n\t"				\
-		  ".machinemode \"zarch_nohighgprs\"\n\t"		\
 		  /* Setup to check for surrogates.  */			\
 		  "    larl %[R_TMP],9f\n\t"				\
 		  "    vlm %%v30,%%v31,0(%[R_TMP])\n\t"			\
-		  CONVERT_32BIT_SIZE_T ([R_INLEN])			\
-		  CONVERT_32BIT_SIZE_T ([R_OUTLEN])			\
 		  /* Loop which handles UTF-32 chars			\
 		     ch < 0xd800 || (ch > 0xdfff && ch < 0x10000).  */	\
 		  "0:  clgijl %[R_INLEN],32,20f\n\t"			\

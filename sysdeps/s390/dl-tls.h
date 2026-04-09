@@ -69,7 +69,6 @@ versioned_symbol (ld, __tls_get_addr_internal_tmp,
    2) __tls_get_offset returns the offset of the requested variable to
       the thread descriptor instead of a pointer to the variable.
  */
-#  ifdef __s390x__
 __asm__("\n\
 	.text\n\
 	.globl __tls_get_offset\n\
@@ -79,20 +78,6 @@ __tls_get_offset:\n\
 	la	%r2,0(%r2,%r12)\n\
 	jg	__tls_get_addr\n\
 ");
-#  elif defined __s390__
-__asm__("\n\
-	.text\n\
-	.globl __tls_get_offset\n\
-	.type __tls_get_offset, @function\n\
-	.align 4\n\
-__tls_get_offset:\n\
-	basr	%r3,0\n\
-0:	la	%r2,0(%r2,%r12)\n\
-	l	%r4,1f-0b(%r3)\n\
-	b	0(%r4,%r3)\n\
-1:	.long	__tls_get_addr - 0b\n\
-");
-#  endif
 # else /* IS_IN (rtld) */
 extern void *__tls_get_addr_internal (tls_index *ti);
 # endif /* !IS_IN (rtld) */

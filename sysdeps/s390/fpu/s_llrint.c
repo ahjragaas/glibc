@@ -17,11 +17,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#if defined __s390x__ && defined HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT
-/* We only support s390x as on s390 a long long int refers to a register pair
-   of two 4byte registers instead of a 8byte register which is produced by the
-   instruction.
-   Note: On s390 this instruction would only be used if build with -mzarch.  */
+#ifdef HAVE_S390_MIN_Z196_ZARCH_ASM_SUPPORT
 # include <math.h>
 # include <libm-alias-double.h>
 

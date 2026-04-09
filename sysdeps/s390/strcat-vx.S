@@ -1,4 +1,4 @@
-/* Vector optimized 32/64 bit S/390 version of strcat.
+/* Vector optimized 64 bit S/390 version of strcat.
    Copyright (C) 2015-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -40,7 +40,6 @@
 */
 ENTRY(STRCAT_Z13)
 	.machine "z13"
-	.machinemode "zarch_nohighgprs"
 
 	lgr	%r0,%r2		/* Save destination pointer for return.  */
 

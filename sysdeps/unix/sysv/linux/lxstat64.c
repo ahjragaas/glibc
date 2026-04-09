@@ -75,7 +75,7 @@ ___lxstat64 (int vers, const char *name, struct stat64 *buf)
 				AT_SYMLINK_NOFOLLOW);
 # else
   /* Old kABIs with old non-LFS support, e.g. arm, i386, hppa, m68k,
-     microblaze, s390, sh, mips32, powerpc32, and sparc32.  */
+     microblaze, sh, mips32, powerpc32, and sparc32.  */
   return INLINE_SYSCALL_CALL (lstat64, name, buf);
 # endif /* STAT_IS_KERNEL_STAT  */
 #endif /* XSTAT_IS_XSTAT64  */

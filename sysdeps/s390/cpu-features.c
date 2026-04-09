@@ -170,15 +170,12 @@ init_cpu_features_no_tunables (struct cpu_features *cpu_features)
   cpu_features->hwcap = GLRO(dl_hwcap);
 
   /* We want just 1 double word to be returned.  */
-  if (__glibc_likely ((cpu_features->hwcap & HWCAP_S390_STFLE)
-		      && (cpu_features->hwcap & HWCAP_S390_ZARCH)
-		      && (cpu_features->hwcap & HWCAP_S390_HIGH_GPRS)))
+  if (__glibc_likely ((cpu_features->hwcap & HWCAP_S390_STFLE)))
     {
       unsigned long long stfle_bits[4] = { 0 };
       register unsigned long reg0 __asm__("0") = 3;
       __asm__ __volatile__(".machine push"        "\n\t"
 			   ".machine \"z9-109\""  "\n\t"
-			   ".machinemode \"zarch_nohighgprs\"\n\t"
 			   "stfle %0"             "\n\t"
 			   ".machine pop"         "\n"
 			   : "=QS" (stfle_bits[0]),
