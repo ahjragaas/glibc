@@ -8489,70 +8489,37 @@ sysdeps/s390/memchr-z900.S:
 sysdeps/s390/memset-z900.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/s390/s390-32/__longjmp.c:
+sysdeps/s390/__longjmp.c:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/s390/s390-32/add_n.S:
+sysdeps/s390/add_n.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/s390/s390-32/addmul_1.S:
+sysdeps/s390/crti.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/s390/s390-32/dl-machine.h:
-    Contributed by Carl Pederson & Martin Schwidefsky.
-
-sysdeps/s390/s390-32/mul_1.S:
+sysdeps/s390/crtn.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/s390/s390-32/s390-mcount.S:
+sysdeps/s390/dl-machine.h:
+    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
+
+sysdeps/s390/s390x-mcount.h:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com)
 
-sysdeps/s390/s390-32/setjmp.S:
+sysdeps/s390/setjmp.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/s390/s390-32/start.S:
+sysdeps/s390/start.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/s390/s390-32/strncpy-z900.S:
+sysdeps/s390/strncpy-z900.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/s390/s390-32/sub_n.S:
+sysdeps/s390/sub_n.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/s390/s390-32/sysdep.h:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/s390/s390-64/__longjmp.c:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/s390/s390-64/add_n.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/s390/s390-64/crti.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/s390/s390-64/crtn.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/s390/s390-64/dl-machine.h:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/s390/s390-64/s390x-mcount.h:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com)
-
-sysdeps/s390/s390-64/setjmp.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/s390/s390-64/start.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/s390/s390-64/strncpy-z900.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/s390/s390-64/sub_n.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/s390/s390-64/sysdep.h:
+sysdeps/s390/sysdep.h:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
 sysdeps/s390/strcmp-z900.S:
@@ -9613,130 +9580,37 @@ sysdeps/unix/sysv/linux/s390/bits/elfclass.h:
 sysdeps/unix/sysv/linux/s390/dl-procinfo.h:
     Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2006.
 
-sysdeps/unix/sysv/linux/s390/s390-32/____longjmp_chk.c:
+sysdeps/unix/sysv/linux/s390/____longjmp_chk.c:
     Contributed by Jakub Jelinek <jakub@redhat.com>.
 
-sysdeps/unix/sysv/linux/s390/s390-32/clone.S:
+sysdeps/unix/sysv/linux/s390/clone.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/unix/sysv/linux/s390/s390-32/getcontext.S:
+sysdeps/unix/sysv/linux/s390/getcontext.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/unix/sysv/linux/s390/s390-32/getutent.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/getutent_r.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/getutid.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/getutid_r.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/getutline.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/getutline_r.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/getutmp.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/getutxent.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/getutxid.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/getutxline.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/login.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/login32.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/makecontext.c:
+sysdeps/unix/sysv/linux/s390/makecontext.c:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/unix/sysv/linux/s390/s390-32/pututxline.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/register-dump.h:
+sysdeps/unix/sysv/linux/s390/register-dump.h:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/unix/sysv/linux/s390/s390-32/setcontext.S:
+sysdeps/unix/sysv/linux/s390/setcontext.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/unix/sysv/linux/s390/s390-32/swapcontext.S:
+sysdeps/unix/sysv/linux/s390/swapcontext.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/unix/sysv/linux/s390/s390-32/syscall.S:
+sysdeps/unix/sysv/linux/s390/syscall.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/unix/sysv/linux/s390/s390-32/sysdep.S:
+sysdeps/unix/sysv/linux/s390/sysdep.S:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h:
+sysdeps/unix/sysv/linux/s390/sysdep.h:
     Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
 
-sysdeps/unix/sysv/linux/s390/s390-32/updwtmp.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/updwtmpx.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/utmp-compat.h:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/utmp-convert.h:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/utmp32.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/utmpx-convert.h:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/utmpx32.c:
-    Contributed by Andreas Krebbel <Andreas.Krebbel@de.ibm.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-32/vfork.S:
-    Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
-
-sysdeps/unix/sysv/linux/s390/s390-64/____longjmp_chk.c:
-    Contributed by Jakub Jelinek <jakub@redhat.com>.
-
-sysdeps/unix/sysv/linux/s390/s390-64/clone.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/unix/sysv/linux/s390/s390-64/getcontext.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/unix/sysv/linux/s390/s390-64/makecontext.c:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/unix/sysv/linux/s390/s390-64/register-dump.h:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/unix/sysv/linux/s390/s390-64/setcontext.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/unix/sysv/linux/s390/s390-64/swapcontext.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/unix/sysv/linux/s390/s390-64/syscall.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/unix/sysv/linux/s390/s390-64/sysdep.S:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h:
-    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
-
-sysdeps/unix/sysv/linux/s390/s390-64/vfork.S:
+sysdeps/unix/sysv/linux/s390/vfork.S:
     Contributed by Jakub Jelinek <jakub@redhat.com>, 2004.
 
 sysdeps/unix/sysv/linux/s390/sigcontextinfo.h:
