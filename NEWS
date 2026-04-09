@@ -27,6 +27,8 @@ Deprecated and removed features, and other changes affecting compatibility:
   alignment, because no object of size 1 can have a fundamental
   alignment greater than 1.
 
+ * The s390-linux-gnu (31bit) configuration is no longer supported.
+
 Changes to build and runtime requirements:
 
   [Add changes to build and runtime requirements here]
