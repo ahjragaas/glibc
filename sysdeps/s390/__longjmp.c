@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include <stap-probe.h>
 
-/* See sysdeps/unix/sysv/linux/s390/s390-64/pointer_guard.h.  */
+/* See sysdeps/unix/sysv/linux/s390/pointer_guard.h.  */
 #if IS_IN (rtld)
 # undef PTR_DEMANGLE
 #endif

@@ -3,6 +3,9 @@ libc {
     setjmp; _setjmp; __sigsetjmp;
     longjmp; _longjmp; siglongjmp;
   }
+  GLIBC_2.29 {
+    __fentry__;
+  }
 }
 
 ld {

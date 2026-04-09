@@ -4,7 +4,7 @@
 case "$machine" in
 s390x)
   base_machine=s390
-  machine=s390/s390-64
+  machine=s390
   ;;
 s390)
   as_fn_error $? "s390-32 is not supported anymore." "$LINENO" 5
