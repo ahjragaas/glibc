@@ -41,11 +41,6 @@ _dl_open_check (struct link_map *m, int dlopen_mode)
   _dl_gcs_check (m, NULL, dlopen_mode);
 }
 
-static inline void __attribute__ ((always_inline))
-_dl_process_pt_note (struct link_map *l, int fd, const ElfW(Phdr) *ph)
-{
-}
-
 static inline int
 _dl_process_gnu_property (struct link_map *l, int fd, uint32_t type,
 			  uint32_t datasz, void *data)

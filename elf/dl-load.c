@@ -1332,15 +1332,11 @@ cannot enable executable stack as shared object requires");
 
   /* Process program headers again after load segments are mapped in
      case processing requires accessing those segments.  Scan program
-     headers backward so that PT_NOTE can be skipped if PT_GNU_PROPERTY
-     exits.  */
+     headers backward since PT_GNU_PROPERTY is close to the end of
+     program headers.  */
   for (ph = &l->l_phdr[l->l_phnum]; ph != l->l_phdr; --ph)
-    switch (ph[-1].p_type)
+    if (ph[-1].p_type == PT_GNU_PROPERTY)
       {
-      case PT_NOTE:
-	_dl_process_pt_note (l, fd, &ph[-1]);
-	break;
-      case PT_GNU_PROPERTY:
 	_dl_process_pt_gnu_property (l, fd, &ph[-1]);
 	break;
       }

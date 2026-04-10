@@ -229,13 +229,6 @@ _dl_process_property_note (struct link_map *l, const ElfW(Nhdr) *note,
     l->l_property = lc_property_none;
 }
 
-static inline void __attribute__ ((unused))
-_dl_process_pt_note (struct link_map *l, int fd, const ElfW(Phdr) *ph)
-{
-  const ElfW(Nhdr) *note = (const void *) (ph->p_vaddr + l->l_addr);
-  _dl_process_property_note (l, note, ph->p_memsz, ph->p_align);
-}
-
 static inline int __attribute__ ((always_inline))
 _dl_process_gnu_property (struct link_map *l, int fd, uint32_t type,
 			  uint32_t datasz, void *data)

@@ -1209,15 +1209,11 @@ rtld_setup_main_map (struct link_map *main_map)
 	main_map->l_relro_size = ph->p_memsz;
 	break;
       }
-  /* Process program headers again, but scan them backwards so
-     that PT_NOTE can be skipped if PT_GNU_PROPERTY exits.  */
+  /* Process program headers again, but scan them backwards since
+     PT_GNU_PROPERTY is close to the end of program headers.   */
   for (const ElfW(Phdr) *ph = &phdr[phnum]; ph != phdr; --ph)
-    switch (ph[-1].p_type)
+    if (ph[-1].p_type == PT_GNU_PROPERTY)
       {
-      case PT_NOTE:
-	_dl_process_pt_note (main_map, -1, &ph[-1]);
-	break;
-      case PT_GNU_PROPERTY:
 	_dl_process_pt_gnu_property (main_map, -1, &ph[-1]);
 	break;
       }

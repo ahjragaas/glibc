@@ -36,11 +36,6 @@ _dl_open_check (struct link_map *m, int dlopen_mode)
 {
 }
 
-static inline void __attribute__ ((always_inline))
-_dl_process_pt_note (struct link_map *l, int fd, const ElfW(Phdr) *ph)
-{
-}
-
 /* Called for each property in the NT_GNU_PROPERTY_TYPE_0 note of L,
    processing of the properties continues until this returns 0.  */
 static inline int __attribute__ ((always_inline))
