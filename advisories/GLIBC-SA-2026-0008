@@ -1,0 +1,16 @@
+Static buffer overflow in deprecated nis_local_principal
+
+The obsolete nis_local_principal function in the GNU C Library version
+2.43 and older may overflow a buffer in the data section, which could
+allow an attacker to spoof a crafted response to a UDP request generated
+by this function and overwrite neighboring static data in the requesting
+application.
+
+NIS support is obsolete and has been deprecated in the GNU C Library
+since version 2.26 and is only maintained for legacy usage. Applications
+should port away from NIS to more modern identity and access management
+services.
+
+CVE-Id: CVE-2026-5358
+Public-Date: 2026-04-10
+Reported-by: Rahul Hoysala
