@@ -242,6 +242,7 @@ tests := \
   bug-regex36 \
   bug-regex37 \
   bug-regex38 \
+  bug-regex39 \
   regexbug1 \
   runptests \
   runtests \
