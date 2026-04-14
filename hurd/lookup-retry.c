@@ -323,9 +323,12 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		    err = opentty (result);
 		    goto out;
 		  case '/':
-		    if (err = opentty (&startdir))
+		    if (*result != MACH_PORT_NULL)
+		      __mach_port_deallocate (__mach_task_self (), *result);
+		    if (err = opentty (result))
 		      goto out;
-		    memmove (retryname, &retryname[4], strlen(retryname + 4) + 1);
+		    startdir = *result;
+		    file_name = &retryname[3];
 		    break;
 		  default:
 		    goto bad_magic;
