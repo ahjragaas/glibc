@@ -71,6 +71,7 @@ struct filebuf
 #include <dl-dst.h>
 #include <dl-load.h>
 #include <dl-map-segments.h>
+#include <dl-map-segment-align.h>
 #include <dl-unmap-segments.h>
 #include <dl-machine-reject-phdr.h>
 #include <dl-prop.h>
@@ -1171,6 +1172,9 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
 
 	  /* Optimize a common case.  */
 	  c->prot = pf_to_prot (ph->p_flags);
+
+	  /* Architecture-specific adjustment of segment alignment. */
+	  p_align_max = _dl_map_segment_align (c, p_align_max);
 	  break;
 
 	case PT_TLS:
