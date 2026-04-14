@@ -673,6 +673,7 @@ endif
 
 ifeq ($(subdir),elf)
 dl-routines += \
+  dl-map-segment-align \
   dl-rseq-symbols \
   # dl-routines
 
