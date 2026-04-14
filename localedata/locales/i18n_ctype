@@ -27,7 +27,8 @@ language  ""
 territory "Earth"
 revision  "14.0.0"
 date      "2025-08-18"
-category  "i18n:2012";LC_CTYPE
+
+category "i18n:2012";LC_CTYPE
 END LC_IDENTIFICATION
 
 LC_CTYPE

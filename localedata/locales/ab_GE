@@ -27,18 +27,18 @@ territory    "Georgia"
 revision     "1.0"
 date         "2021-08-20"
 
-category  "i18n:2012";LC_IDENTIFICATION
-category  "i18n:2012";LC_CTYPE
-category  "i18n:2012";LC_COLLATE
-category  "i18n:2012";LC_TIME
-category  "i18n:2012";LC_NUMERIC
-category  "i18n:2012";LC_MONETARY
-category  "i18n:2012";LC_PAPER
-category  "i18n:2012";LC_MEASUREMENT
-category  "i18n:2012";LC_MESSAGES
-category  "i18n:2012";LC_NAME
-category  "i18n:2012";LC_ADDRESS
-category  "i18n:2012";LC_TELEPHONE
+category "i18n:2012";LC_IDENTIFICATION
+category "i18n:2012";LC_CTYPE
+category "i18n:2012";LC_COLLATE
+category "i18n:2012";LC_TIME
+category "i18n:2012";LC_NUMERIC
+category "i18n:2012";LC_MONETARY
+category "i18n:2012";LC_PAPER
+category "i18n:2012";LC_MEASUREMENT
+category "i18n:2012";LC_MESSAGES
+category "i18n:2012";LC_NAME
+category "i18n:2012";LC_ADDRESS
+category "i18n:2012";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
