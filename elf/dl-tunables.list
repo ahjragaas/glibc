@@ -24,6 +24,14 @@
 # env_alias: An alias environment variable
 
 glibc {
+  elf {
+    thp {
+      type: INT_32
+      minval: 0
+      maxval: 1
+    }
+  }
+
   malloc {
     check {
       type: INT_32

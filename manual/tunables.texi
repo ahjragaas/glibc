@@ -64,6 +64,7 @@ glibc.pthread.mutex_spin_count: 100 (min: 0, max: 32767)
 glibc.rtld.optional_static_tls: 0x200 (min: 0x0, max: 0xffffffffffffffff)
 glibc.malloc.tcache_max: 0x0 (min: 0x0, max: 0xffffffffffffffff)
 glibc.malloc.check: 0 (min: 0, max: 3)
+glibc.elf.thp: 0 (min: 0, max: 1)
 @end example
 
 @menu
@@ -77,6 +78,8 @@ glibc.malloc.check: 0 (min: 0, max: 3)
 			     @theglibc{}.
 * gmon Tunables::  Tunables that control the gmon profiler, used in
                    conjunction with gprof
+* ELF Tunables::  Tunables that control Transparent Huge Page (THP)
+                  aware alignment of ELF loadable segments
 
 @end menu
 
@@ -762,4 +765,25 @@ Setting either tunable too high may result in a call graph buffer
 whose size exceeds the available memory; in that case, an out of memory
 error will be printed at program startup, the profiler will be
 disabled, and no @file{gmon.out} file will be generated.
+@end deftp
+
+@node ELF Tunables
+@section ELF Tunables
+@cindex elf tunables
+
+@deftp Tunable glibc.elf.thp
+This tunable controls Transparent Huge Page (THP) aware alignment of
+ELF loadable segments.
+
+The default value is @code{0}, which preserves the traditional page-sized
+alignment for loadable segments.
+
+If set to @code{1}, glibc will attempt to align sufficiently large
+@code{PT_LOAD} segments to the PMD huge page size when mapping them
+with @code{mmap}.  This increases the likelihood that the kernel can
+back these mappings with Transparent Huge Pages.
+
+This tunable has an effect only on systems that support Transparent
+Huge Pages (currently Linux).  On other systems, or if THP is disabled
+at the kernel level, enabling this tunable has no effect.
 @end deftp
