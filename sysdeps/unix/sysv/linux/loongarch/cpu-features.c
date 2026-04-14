@@ -27,4 +27,10 @@ init_cpu_features (struct cpu_features *cpu_features)
   GLRO(dl_larch_cpu_features).hwcap = GLRO(dl_hwcap);
   TUNABLE_GET (glibc, cpu, hwcaps, tunable_val_t *,
 	       TUNABLE_CALLBACK (set_hwcaps));
+
+#ifdef __LP64__
+  /* Enable THP-based load segment alignment by default on LoongArch64. */
+  if (!TUNABLE_IS_INITIALIZED (glibc, elf, thp))
+    TUNABLE_SET (glibc, elf, thp, 1);
+#endif
 }
