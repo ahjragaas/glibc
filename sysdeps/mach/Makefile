@@ -63,6 +63,7 @@ else ifeq (nss,$(subdir))
   LDLIBS-tst-rfc3484 += $(objdir)/mach/libmachuser.so
   LDLIBS-tst-rfc3484-2 += $(objdir)/mach/libmachuser.so
   LDLIBS-tst-rfc3484-3 += $(objdir)/mach/libmachuser.so
+  LDLIBS-tst-default-domain += $(objdir)/mach/libmachuser.so
 else ifeq (hesiod,$(subdir))
   LDLIBS-nss_hesiod.so += $(objdir)/mach/libmachuser.so
 else ifeq (nscd,$(subdir))
