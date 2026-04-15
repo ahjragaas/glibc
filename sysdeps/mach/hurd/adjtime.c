@@ -37,6 +37,13 @@ __adjtime (const struct timeval *delta, struct timeval *olddelta)
   if (olddelta == NULL)
     olddelta = &dummy;
 
+  if (delta != NULL)
+    {
+      if (delta->tv_usec >=  TIME_MICROS_MAX ||
+          delta->tv_usec <= -TIME_MICROS_MAX)
+       return EINVAL;
+    }
+
   err = __host_adjust_time (hostpriv,
 			    /* `time_value_t' and `struct timeval' are in
                                fact identical with the names changed.  */
