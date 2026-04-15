@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <sys/time.h>
 #include <hurd.h>
+#include <mach/time_value.h>
 
 /* Adjust the current time of day by the amount in DELTA.
    If OLDDELTA is not NULL, it is filled in with the amount
@@ -44,7 +45,18 @@ __adjtime (const struct timeval *delta, struct timeval *olddelta)
       rpc_delta.microseconds = delta->tv_usec;
     }
   else
+#ifdef MACH_ADJTIME_USECS_OMIT
+    {
+      /* gnumach will not attempt to update the system time if the
+	 specified 'microseconds' is specifically
+	 MACH_ADJTIME_USECS_OMIT. It will still return the olddelta
+	 under these circumstances. */
+      rpc_delta.seconds = 0;
+      rpc_delta.microseconds = MACH_ADJTIME_USECS_OMIT;
+    }
+#else
     return EINVAL;
+#endif
 
   err = __host_adjust_time (hostpriv, rpc_delta, &rpc_olddelta);
   __mach_port_deallocate (__mach_task_self (), hostpriv);
