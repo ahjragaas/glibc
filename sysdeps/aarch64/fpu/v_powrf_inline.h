@@ -1,6 +1,6 @@
 /* Helper for AdvSIMD single-precision powr
 
-   Copyright (C) 2025 Free Software Foundation, Inc.
+   Copyright (C) 2025-2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,6 +16,8 @@
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
+
+#include "powf_common.h"
 
 #define Log2IdxMask (V_POWF_LOG2_N - 1)
 #define Exp2IdxMask (V_POWF_EXP2_N - 1)

@@ -193,3 +193,8 @@ GLIBC_2.43 _ZGVsMxv_log2p1 F
 GLIBC_2.43 _ZGVsMxv_log2p1f F
 GLIBC_2.43 _ZGVsMxv_rsqrt F
 GLIBC_2.43 _ZGVsMxv_rsqrtf F
+GLIBC_2.44 _ZGVnN2vv_powr F
+GLIBC_2.44 _ZGVnN2vv_powrf F
+GLIBC_2.44 _ZGVnN4vv_powrf F
+GLIBC_2.44 _ZGVsMxvv_powr F
+GLIBC_2.44 _ZGVsMxvv_powrf F

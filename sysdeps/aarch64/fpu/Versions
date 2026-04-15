@@ -206,4 +206,11 @@ libmvec {
     _ZGVsMxv_rsqrt;
     _ZGVsMxv_rsqrtf;
   }
+  GLIBC_2.44 {
+    _ZGVnN2vv_powr;
+    _ZGVnN2vv_powrf;
+    _ZGVnN4vv_powrf;
+    _ZGVsMxvv_powr;
+    _ZGVsMxvv_powrf;
+  }
 }

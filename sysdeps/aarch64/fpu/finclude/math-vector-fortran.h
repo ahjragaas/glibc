@@ -80,6 +80,8 @@
 !GCC$ builtin (logp1f) attributes simd (notinbranch) if('fastmath')
 !GCC$ builtin (pow) attributes simd (notinbranch) if('fastmath')
 !GCC$ builtin (powf) attributes simd (notinbranch) if('fastmath')
+!GCC$ builtin (powr) attributes simd (notinbranch) if('fastmath')
+!GCC$ builtin (powrf) attributes simd (notinbranch) if('fastmath')
 !GCC$ builtin (rsqrt) attributes simd (notinbranch) if('fastmath')
 !GCC$ builtin (rsqrtf) attributes simd (notinbranch) if('fastmath')
 !GCC$ builtin (sin) attributes simd (notinbranch) if('fastmath')
