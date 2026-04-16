@@ -447,7 +447,7 @@ bench-deps := bench-skeleton.c bench-timing.h Makefile
 
 run-bench = $(test-wrapper-env) \
 	    $(run-program-env) \
-	    $($*-ENV) $(test-via-rtld-prefix) $${run}
+	    $($*-ENV) $(test-tunables) $(test-via-rtld-prefix) $${run}
 
 timing-type := $(objpfx)bench-timing-type
 extra-objs += bench-timing-type.o

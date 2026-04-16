@@ -438,17 +438,19 @@ malloc-check-env = \
   MALLOC_CHECK_=3 \
   LD_PRELOAD=$(objpfx)/libc_malloc_debug.so
 
-malloc-check-tunables-env = \
-  GLIBC_TUNABLES=glibc.malloc.check=3 \
-  LD_PRELOAD=$(objpfx)/libc_malloc_debug.so
-
 tst-malloc-check-ENV = $(malloc-check-env)
 tst-malloc-usable-ENV = $(malloc-check-env)
 tst-malloc-usable-threaded-main-ENV = $(malloc-check-env)
 tst-malloc-usable-threaded-worker-ENV = $(malloc-check-env)
+
+malloc-check-tunables-env = LD_PRELOAD=$(objpfx)/libc_malloc_debug.so
+malloc-check-tunables-tun = glibc.malloc.check=3
 tst-malloc-usable-tunables-ENV = $(malloc-check-tunables-env)
+tst-malloc-usable-tunables-TUNABLES += $(malloc-check-tunables-tun)
 tst-malloc-usable-tunables-threaded-main-ENV = $(malloc-check-tunables-env)
+tst-malloc-usable-tunables-threaded-main-TUNABLES += $(malloc-check-tunables-tun)
 tst-malloc-usable-tunables-threaded-worker-ENV = $(malloc-check-tunables-env)
+tst-malloc-usable-tunables-threaded-worker-TUNABLES += $(malloc-check-tunables-tun)
 
 CPPFLAGS-malloc-debug.c += -DUSE_TCACHE=0
 CPPFLAGS-malloc.c += -DUSE_TCACHE=1

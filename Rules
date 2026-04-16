@@ -348,21 +348,39 @@ $(1)-malloc-check-ENV = MALLOC_CHECK_=3 \
 endef
 $(foreach t,$(tests-malloc-check),$(eval $(call malloc-check-ENVS,$(t))))
 
+# Generate environment variable GLIBC_TUNABLES to be appended to
+# the test environment, appending tunables specifically added for
+# each test to the ambient GLIBC_TUNABLES environment variable.
+# The *-TUNABLES-only can be used by a test to override any ambient
+# tunables.
+define test-tun-joined
+$(subst $(empty) ,:,$(strip $($*-TUNABLES)))
+endef
+define test-tunables-all
+$(if $($*-TUNABLES),$(if $(GLIBC_TUNABLES),GLIBC_TUNABLES=$(GLIBC_TUNABLES):$(test-tun-joined),GLIBC_TUNABLES=$(test-tun-joined)),)
+endef
+define test-tunables-only
+GLIBC_TUNABLES=$(subst $(empty) ,:,$(strip $($*-TUNABLES-only)))
+endef
+define test-tunables
+$(if $($*-TUNABLES-only),$(test-tunables-only),$(test-tunables-all))
+endef
+
 # All malloc-hugetlb1 tests will be run with GLIBC_TUNABLES=glibc.malloc.hugetlb=1
 define malloc-hugetlb1-ENVS
-$(1)-malloc-hugetlb1-ENV += GLIBC_TUNABLES=glibc.malloc.hugetlb=1
+$(1)-malloc-hugetlb1-TUNABLES += glibc.malloc.hugetlb=1
 endef
 $(foreach t,$(tests-malloc-hugetlb1),$(eval $(call malloc-hugetlb1-ENVS,$(t))))
 
 # All malloc-hugetlb2 tests will be run with GLIBC_TUNABLE=glibc.malloc.hugetlb=2
 define malloc-hugetlb2-ENVS
-$(1)-malloc-hugetlb2-ENV += GLIBC_TUNABLES=glibc.malloc.hugetlb=2
+$(1)-malloc-hugetlb2-TUNABLES += glibc.malloc.hugetlb=2
 endef
 $(foreach t,$(tests-malloc-hugetlb2),$(eval $(call malloc-hugetlb2-ENVS,$(t))))
 
 # All malloc-largetcache tests will be run with GLIBC_TUNABLE=glibc.malloc.tcache_max=1048576
 define malloc-largetcache-ENVS
-$(1)-malloc-largetcache-ENV += GLIBC_TUNABLES=glibc.malloc.tcache_max=1048576
+$(1)-malloc-largetcache-TUNABLES += glibc.malloc.tcache_max=1048576
 endef
 $(foreach t,$(tests-malloc-largetcache),$(eval $(call malloc-largetcache-ENVS,$(t))))
 
@@ -373,12 +391,12 @@ endef
 $(foreach t,$(tests-mcheck),$(eval $(call mcheck-ENVS,$(t))))
 
 ifneq "$(strip $(tests) $(tests-container) $(tests-internal) $(xtests) $(test-srcs))" ""
+
 # These are the implicit rules for making test outputs
 # from the test programs and whatever input files are present.
-
 define make-test-out
-$(if $($*-ENV-only),$(test-wrapper-env-only) $($*-ENV-only),\
-     $(test-wrapper-env) $(run-program-env) $($*-ENV)) \
+$(if $($*-ENV-only),$(test-wrapper-env-only) $($*-ENV-only) $(test-tunables),\
+     $(test-wrapper-env) $(run-program-env) $($*-ENV) $(test-tunables)) \
 $(host-test-program-cmd) $($*-ARGS)
 endef
 $(objpfx)%.out: %.input $(objpfx)%
@@ -394,7 +412,7 @@ $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
 # tests-container.
 $(tests-container:%=$(objpfx)%.out): $(objpfx)%.out : $(if $(wildcard $(objpfx)%.files),$(objpfx)%.files,/dev/null) $(objpfx)%
 	$(test-wrapper-env) $(run-program-env) $(test-via-rtld-prefix) \
-	  $(common-objpfx)support/test-container env $(run-program-env) $($*-ENV) \
+	  $(common-objpfx)support/test-container env $(run-program-env) $($*-ENV) $(test-tunables) \
 	  $(host-test-program-cmd) $($*-ARGS) > $@; \
 	$(evaluate-test)
 
