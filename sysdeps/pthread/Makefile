@@ -546,6 +546,6 @@ LDFLAGS-tst-stack2-mod.so = -Wl,-z,execstack
 ifeq ($(have-no-error-execstack),yes)
 LDFLAGS-tst-stack2-mod.so += -Wl,--no-error-execstack
 endif
-tst-stack2-ENV = GLIBC_TUNABLES=glibc.rtld.execstack=2
+tst-stack2-TUNABLES += glibc.rtld.execstack=2
 
 endif
