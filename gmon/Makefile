@@ -81,8 +81,8 @@ CFLAGS-tst-mcount-overflow.c := -fno-omit-frame-pointer -pg
 tst-mcount-overflow-no-pie = yes
 CRT-tst-mcount-overflow := $(csu-objpfx)g$(start-installed-name)
 # Intentionally use invalid config where maxarcs<minarcs to check warning is printed
-tst-mcount-overflow-ENV := GMON_OUT_PREFIX=$(objpfx)tst-mcount-overflow.data \
-                           GLIBC_TUNABLES=glibc.gmon.minarcs=51:glibc.gmon.maxarcs=50
+tst-mcount-overflow-ENV := GMON_OUT_PREFIX=$(objpfx)tst-mcount-overflow.data
+tst-mcount-overflow-TUNABLES += glibc.gmon.minarcs=51:glibc.gmon.maxarcs=50
 # Send stderr into output file because we make sure expected messages are printed
 tst-mcount-overflow-ARGS := 2>&1 1>/dev/null | cat
 ifeq ($(run-built-tests),yes)
