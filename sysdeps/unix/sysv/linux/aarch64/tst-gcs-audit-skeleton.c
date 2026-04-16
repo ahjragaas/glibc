@@ -71,7 +71,7 @@ do_test (int argc, char *argv[])
   spargv[i] = NULL;
 
   setenv ("LD_AUDIT", AUDIT_MOD, 0);
-  setenv ("GLIBC_TUNABLES", "glibc.cpu.aarch64_gcs=" GCS_MODE, 0);
+  setenv ("GLIBC_TUNABLES", "glibc.cpu.aarch64_gcs=" GCS_MODE, 1);
 
   struct support_capture_subprocess result
     = support_capture_subprogram (spargv[0], spargv, NULL);

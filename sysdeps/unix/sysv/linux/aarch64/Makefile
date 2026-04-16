@@ -70,21 +70,19 @@ $(objpfx)tst-bti-ld-debug-dlopen.out: $(objpfx)tst-bti-mod-unprot.so
 $(objpfx)tst-bti-permissive-dlopen.out: $(objpfx)tst-bti-mod-unprot.so
 
 $(objpfx)tst-bti-abort-unprot-preload.out: $(objpfx)tst-bti-mod-unprot-preload.so
-tst-bti-abort-unprot-preload-ENV = \
-  GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1 \
-  LD_PRELOAD=$(objpfx)tst-bti-mod-unprot-preload.so
+tst-bti-abort-unprot-preload-ENV = LD_PRELOAD=$(objpfx)tst-bti-mod-unprot-preload.so
+tst-bti-abort-unprot-preload-TUNABLES = glibc.cpu.aarch64_bti=1
 
 $(objpfx)tst-bti-dep-prot-preload.out: $(objpfx)tst-bti-mod-prot-preload.so
 # The 'fun' function will be provided by the preload library
 LDFLAGS-tst-bti-dep-prot-preload = -Wl,--unresolved-symbols=ignore-all
-tst-bti-dep-prot-preload-ENV = \
-  GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0 \
-  LD_PRELOAD=$(objpfx)tst-bti-mod-prot-preload.so
+tst-bti-dep-prot-preload-ENV = LD_PRELOAD=$(objpfx)tst-bti-mod-prot-preload.so
+tst-bti-dep-prot-preload-TUNABLES += glibc.cpu.aarch64_bti=0
+
 
 $(objpfx)tst-bti-permissive-preload.out: $(objpfx)tst-bti-mod-unprot-preload.so
-tst-bti-permissive-preload-ENV = \
-  GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0 \
-  LD_PRELOAD=$(objpfx)tst-bti-mod-unprot-preload.so
+tst-bti-permissive-preload-ENV = LD_PRELOAD=$(objpfx)tst-bti-mod-unprot-preload.so
+tst-bti-permissive-preload-TUNABLES += glibc.cpu.aarch64_bti=0
 
 CFLAGS-tst-bti-abort-unprot.o += -mbranch-protection=none
 CFLAGS-tst-bti-ld-debug-exe.o += -mbranch-protection=none
@@ -93,17 +91,17 @@ CFLAGS-tst-bti-mod-unprot.os += -mbranch-protection=none
 CFLAGS-tst-bti-mod-unprot-preload.os += -mbranch-protection=none
 CFLAGS-tst-bti-mod-unprot-audit.os += -mbranch-protection=none
 
-tst-bti-abort-imm-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
-tst-bti-abort-transitive-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
-tst-bti-abort-unprot-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
-tst-bti-dep-prot-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
-tst-bti-dlopen-imm-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
-tst-bti-dlopen-prot-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
-tst-bti-dlopen-transitive-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
+tst-bti-abort-imm-TUNABLES = glibc.cpu.aarch64_bti=1
+tst-bti-abort-transitive-TUNABLES = glibc.cpu.aarch64_bti=1
+tst-bti-abort-unprot-TUNABLES = glibc.cpu.aarch64_bti=1
+tst-bti-dep-prot-TUNABLES += glibc.cpu.aarch64_bti=1
+tst-bti-dlopen-imm-TUNABLES += glibc.cpu.aarch64_bti=1
+tst-bti-dlopen-prot-TUNABLES += glibc.cpu.aarch64_bti=1
+tst-bti-dlopen-transitive-TUNABLES += glibc.cpu.aarch64_bti=1
 
-tst-bti-permissive-imm-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0
-tst-bti-permissive-transitive-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0
-tst-bti-permissive-dlopen-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0
+tst-bti-permissive-imm-TUNABLES += glibc.cpu.aarch64_bti=0
+tst-bti-permissive-transitive-TUNABLES += glibc.cpu.aarch64_bti=0
+tst-bti-permissive-dlopen-TUNABLES-only = glibc.cpu.aarch64_bti=0
 
 $(objpfx)tst-bti-unprot-audit.out: $(objpfx)tst-bti-mod-unprot-audit.so
 tst-bti-unprot-audit-ARGS = -- $(host-test-program-cmd)
@@ -112,14 +110,16 @@ $(objpfx)tst-bti-prot-audit.out: $(objpfx)tst-bti-mod-prot-audit.so
 $(objpfx)tst-bti-prot-audit: $(objpfx)tst-bti-mod-prot.so
 tst-bti-prot-audit-ARGS = -- $(host-test-program-cmd)
 
-tst-bti-permissive-audit-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=0
+tst-bti-permissive-audit-TUNABLES += glibc.cpu.aarch64_bti=0
 $(objpfx)tst-bti-permissive-audit.out: $(objpfx)tst-bti-mod-unprot-audit.so
 $(objpfx)tst-bti-permissive-audit: $(objpfx)tst-bti-mod.so
 tst-bti-permissive-audit-ARGS = -- $(host-test-program-cmd)
 
 define run-bti-abort-test
   $(test-wrapper-env) $(run-program-env) \
-  $(tst-bti-abort-$*-ENV) $(host-test-program-cmd)
+  $(tst-bti-abort-$*-ENV) \
+  GLIBC_TUNABLES=$(subst $(empty) ,:,$(strip $(tst-bti-abort-$*-TUNABLES))) \
+  $(host-test-program-cmd)
 endef
 
 $(objpfx)tst-bti-abort-%.out: $(..)sysdeps/unix/sysv/linux/aarch64/tst-bti-abort.sh \
@@ -131,7 +131,7 @@ tests-static += \
   tst-bti-abort-static \
   # tests-static
 
-tst-bti-abort-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_bti=1
+tst-bti-abort-static-TUNABLES = glibc.cpu.aarch64_bti=1
 CFLAGS-tst-bti-abort-static.o += -mbranch-protection=none
 
 $(objpfx)tst-bti-ld-debug-%.out: $(..)elf/tst-dl-debug-protect.sh $(objpfx)tst-bti-ld-debug-%
@@ -202,7 +202,9 @@ tests-static += \
 
 define run-gcs-abort-test
   $(test-wrapper-env) $(run-program-env) \
-  $(tst-gcs-$*-abort-ENV) $(host-test-program-cmd)
+  $(tst-gcs-$*-abort-ENV) \
+  GLIBC_TUNABLES=$(subst $(empty) ,:,$(strip $(tst-gcs-$*-abort-TUNABLES))) \
+  $(host-test-program-cmd)
 endef
 
 $(objpfx)tst-gcs-%-abort.out: $(..)sysdeps/unix/sysv/linux/aarch64/tst-gcs-abort.sh \
@@ -224,37 +226,37 @@ LDFLAGS-tst-gcs-optional-static-on += -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-optional-static-off += -Wl,-z,gcs=never
 LDFLAGS-tst-gcs-override-static += -Wl,-z,gcs=never
 
-tst-gcs-disabled-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
-tst-gcs-enforced-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
-tst-gcs-enforced-abort-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
-tst-gcs-optional-on-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
-tst-gcs-optional-off-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
-tst-gcs-override-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
+tst-gcs-disabled-TUNABLES += glibc.cpu.aarch64_gcs=0
+tst-gcs-enforced-TUNABLES += glibc.cpu.aarch64_gcs=1
+tst-gcs-enforced-abort-TUNABLES += glibc.cpu.aarch64_gcs=1
+tst-gcs-optional-on-TUNABLES += glibc.cpu.aarch64_gcs=2
+tst-gcs-optional-off-TUNABLES += glibc.cpu.aarch64_gcs=2
+tst-gcs-override-TUNABLES += glibc.cpu.aarch64_gcs=3
 
-tst-gcs-disabled-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
-tst-gcs-enforced-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
-tst-gcs-enforced-static-abort-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
-tst-gcs-optional-static-on-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
-tst-gcs-optional-static-off-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
-tst-gcs-override-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
+tst-gcs-disabled-static-TUNABLES += glibc.cpu.aarch64_gcs=0
+tst-gcs-enforced-static-TUNABLES += glibc.cpu.aarch64_gcs=1
+tst-gcs-enforced-static-abort-TUNABLES += glibc.cpu.aarch64_gcs=1
+tst-gcs-optional-static-on-TUNABLES += glibc.cpu.aarch64_gcs=2
+tst-gcs-optional-static-off-TUNABLES += glibc.cpu.aarch64_gcs=2
+tst-gcs-override-static-TUNABLES += glibc.cpu.aarch64_gcs=3
 
 LDFLAGS-tst-gcs-execv += -Wl,-z,gcs=always
-tst-gcs-execv-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
+tst-gcs-execv-TUNABLES += glibc.cpu.aarch64_gcs=1
 tst-gcs-execv-ARGS = -- $(host-test-program-cmd)
 LDFLAGS-tst-gcs-fork += -Wl,-z,gcs=always
-tst-gcs-fork-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
+tst-gcs-fork-TUNABLES += glibc.cpu.aarch64_gcs=2
 
 LDFLAGS-tst-gcs-lock += -Wl,-z,gcs=always
-tst-gcs-lock-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
+tst-gcs-lock-TUNABLES += glibc.cpu.aarch64_gcs=1
 LDFLAGS-tst-gcs-lock-ptrace += -Wl,-z,gcs=always
-tst-gcs-lock-ptrace-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
+tst-gcs-lock-ptrace-TUNABLES += glibc.cpu.aarch64_gcs=1
 tst-gcs-lock-ptrace-ARGS = -- $(host-test-program-cmd)
 LDFLAGS-tst-gcs-lock-static += -Wl,-z,gcs=always
-tst-gcs-lock-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
+tst-gcs-lock-static-TUNABLES += glibc.cpu.aarch64_gcs=1
 LDFLAGS-tst-gcs-unlock += -Wl,-z,gcs=always
-tst-gcs-unlock-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
+tst-gcs-unlock-TUNABLES += glibc.cpu.aarch64_gcs=2
 LDFLAGS-tst-gcs-unlock-static += -Wl,-z,gcs=always
-tst-gcs-unlock-static-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
+tst-gcs-unlock-static-TUNABLES += glibc.cpu.aarch64_gcs=2
 
 # force one of the dependencies to be unmarked
 LDFLAGS-tst-gcs-mod2.so += -Wl,-z,gcs=never
@@ -283,10 +285,10 @@ $(objpfx)tst-gcs-mod1.so: $(objpfx)tst-gcs-mod2.so
 $(objpfx)tst-gcs-ld-debug-both: $(objpfx)tst-gcs-mod2.so
 $(objpfx)tst-gcs-ld-debug-shared: $(objpfx)tst-gcs-mod1.so $(objpfx)tst-gcs-mod3.so
 
-tst-gcs-shared-disabled-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
-tst-gcs-shared-enforced-abort-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
-tst-gcs-shared-optional-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
-tst-gcs-shared-override-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
+tst-gcs-shared-disabled-TUNABLES += glibc.cpu.aarch64_gcs=0
+tst-gcs-shared-enforced-abort-TUNABLES = glibc.cpu.aarch64_gcs=1
+tst-gcs-shared-optional-TUNABLES += glibc.cpu.aarch64_gcs=2
+tst-gcs-shared-override-TUNABLES += glibc.cpu.aarch64_gcs=3
 
 LDFLAGS-tst-gcs-dlopen-disabled = -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-dlopen-enforced = -Wl,-z,gcs=always
@@ -296,11 +298,11 @@ LDFLAGS-tst-gcs-dlopen-override = -Wl,-z,gcs=always
 LDFLAGS-tst-gcs-ld-debug-exe = -Wl,-z,gcs=never
 LDFLAGS-tst-gcs-ld-debug-both = -Wl,-z,gcs=never
 
-tst-gcs-dlopen-disabled-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
-tst-gcs-dlopen-enforced-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1
-tst-gcs-dlopen-optional-on-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
-tst-gcs-dlopen-optional-off-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2
-tst-gcs-dlopen-override-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3
+tst-gcs-dlopen-disabled-TUNABLES += glibc.cpu.aarch64_gcs=0
+tst-gcs-dlopen-enforced-TUNABLES += glibc.cpu.aarch64_gcs=1
+tst-gcs-dlopen-optional-on-TUNABLES += glibc.cpu.aarch64_gcs=2
+tst-gcs-dlopen-optional-off-TUNABLES += glibc.cpu.aarch64_gcs=2
+tst-gcs-dlopen-override-TUNABLES += glibc.cpu.aarch64_gcs=3
 
 $(objpfx)tst-gcs-dlopen-disabled.out: $(objpfx)tst-gcs-mod2.so
 $(objpfx)tst-gcs-dlopen-enforced.out: $(objpfx)tst-gcs-mod2.so
@@ -311,7 +313,7 @@ $(objpfx)tst-gcs-ld-debug-dlopen.out: $(objpfx)tst-gcs-mod2.so
 
 LDFLAGS-tst-gcs-noreturn = -Wl,-z,gcs=always
 
-tst-gcs-noreturn-ENV = GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0
+tst-gcs-noreturn-TUNABLES += glibc.cpu.aarch64_gcs=0
 
 $(objpfx)tst-gcs-ld-debug-%.out: $(..)elf/tst-dl-debug-protect.sh $(objpfx)tst-gcs-ld-debug-%
 	$(SHELL) $< $(objpfx) '$(test-wrapper-env)' '$(rtld-prefix)' \
@@ -329,18 +331,17 @@ $(objpfx)tst-gcs-preload-enforced-abort: $(objpfx)tst-gcs-mod1.so
 $(objpfx)tst-gcs-preload-optional: $(objpfx)tst-gcs-mod1.so
 $(objpfx)tst-gcs-preload-override: $(objpfx)tst-gcs-mod1.so
 
-tst-gcs-preload-disabled-ENV = \
-  GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=0 \
-  LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
-tst-gcs-preload-enforced-abort-ENV = \
-  GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=1 \
-  LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
-tst-gcs-preload-optional-ENV = \
-  GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=2 \
-  LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
-tst-gcs-preload-override-ENV = \
-  GLIBC_TUNABLES=glibc.cpu.aarch64_gcs=3 \
-  LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
+tst-gcs-preload-disabled-ENV = LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
+tst-gcs-preload-disabled-TUNABLES += glibc.cpu.aarch64_gcs=0
+
+tst-gcs-preload-enforced-abort-ENV = LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
+tst-gcs-preload-enforced-abort-TUNABLES += glibc.cpu.aarch64_gcs=1
+
+tst-gcs-preload-optional-ENV = LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
+tst-gcs-preload-optional-TUNABLES += glibc.cpu.aarch64_gcs=2
+
+tst-gcs-preload-override-ENV = LD_PRELOAD=$(objpfx)tst-gcs-mod1.so
+tst-gcs-preload-override-TUNABLES += glibc.cpu.aarch64_gcs=3
 
 LDFLAGS-tst-gcs-audit1.so += -Wl,-z,gcs=never
 
