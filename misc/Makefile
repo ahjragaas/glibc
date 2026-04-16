@@ -374,8 +374,8 @@ $(objpfx)tst-allocate_once-mem.out: $(objpfx)tst-allocate_once.out
 	$(common-objpfx)malloc/mtrace $(objpfx)tst-allocate_once.mtrace > $@; \
 	$(evaluate-test)
 
-tst-syslog-long-progname-ENV = GLIBC_TUNABLES=glibc.malloc.check=3 \
-			       LD_PRELOAD=libc_malloc_debug.so.0
+tst-syslog-long-progname-ENV = LD_PRELOAD=libc_malloc_debug.so.0
+tst-syslog-long-progname-TUNABLES += glibc.malloc.check=3
 
 $(objpfx)tst-select: $(librt)
 $(objpfx)tst-select-time64: $(librt)

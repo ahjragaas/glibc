@@ -413,8 +413,8 @@ $(objpfx)tst-sched-consts.out: ../sysdeps/unix/sysv/linux/tst-sched-consts.py
 	  < /dev/null > $@ 2>&1; $(evaluate-test)
 $(objpfx)tst-sched-consts.out: $(sysdeps-linux-python-deps)
 
-tst-rseq-disable-ENV = GLIBC_TUNABLES=glibc.pthread.rseq=0
-tst-rseq-disable-static-ENV = GLIBC_TUNABLES=glibc.pthread.rseq=0
+tst-rseq-disable-TUNABLES += glibc.pthread.rseq=0
+tst-rseq-disable-static-TUNABLES += glibc.pthread.rseq=0
 
 endif # $(subdir) == misc
 
