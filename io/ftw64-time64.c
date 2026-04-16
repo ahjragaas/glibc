@@ -29,5 +29,5 @@
 # define FTW_FUNC_T     __ftw64_time64_func_t
 # define NFTW_FUNC_T    __nftw64_time64_func_t
 
-# include "ftw.c"
+# include "ftw-common.c"
 #endif
