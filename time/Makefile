@@ -152,4 +152,4 @@ CPPFLAGS-tst-tzname.c += -DTZDEFRULES='"$(posixrules-file)"'
 
 bug-getdate1-ARGS = ${objpfx}bug-getdate1-fmt
 
-tst-tzfile-fault-ENV = GLIBC_TUNABLES=glibc.rtld.enable_secure=1
+tst-tzfile-fault-TUNABLES += glibc.rtld.enable_secure=1
