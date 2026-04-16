@@ -2065,10 +2065,10 @@ CFLAGS-tst-execstack-mod.c += -Wno-trampolines
 # It expects loading a module with executable stack to work.
 CFLAGS-tst-execstack-tunable.c += -DUSE_PTHREADS=0 -DDEFAULT_RWX_STACK=1
 $(objpfx)tst-execstack-tunable.out: $(objpfx)tst-execstack-mod.so
-tst-execstack-tunable-ENV = GLIBC_TUNABLES=glibc.rtld.execstack=2
+tst-execstack-tunable-TUNABLES += glibc.rtld.execstack=2
 
 LDFLAGS-tst-execstack-prog-static-tunable = -Wl,-z,noexecstack
-tst-execstack-prog-static-tunable-ENV = GLIBC_TUNABLES=glibc.rtld.execstack=2
+tst-execstack-prog-static-tunable-TUNABLES += glibc.rtld.execstack=2
 
 LDFLAGS-tst-execstack-prog-static = -Wl,-z,execstack
 ifeq ($(have-no-error-execstack),yes)
@@ -3295,8 +3295,8 @@ $(objpfx)tst-dlclose-lazy.out: \
 
 $(objpfx)tst-decorate-maps: $(shared-thread-library)
 
-tst-decorate-maps-ENV = \
-  GLIBC_TUNABLES=glibc.malloc.arena_max=8:glibc.malloc.mmap_threshold=1024:glibc.mem.decorate_maps=1
+tst-decorate-maps-TUNABLES += \
+  glibc.malloc.arena_max=8:glibc.malloc.mmap_threshold=1024:glibc.mem.decorate_maps=1
 tst-decorate-maps-ARGS = 8
 
 LDFLAGS-tst-non-directory-mod.so = -Wl,-soname,tst-non-directory-mod.so
