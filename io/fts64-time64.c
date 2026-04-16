@@ -33,5 +33,5 @@
 # define STRUCT_STATFS      statfs64
 # define FSTATFS            __fstatfs64
 
-# include "fts.c"
+# include "fts-common.c"
 #endif

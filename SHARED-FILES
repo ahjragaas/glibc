@@ -49,7 +49,7 @@ gnulib:
   io/cycle-check.h
   io/dev-ino.h
   io/fts-cycle.c
-  io/fts.c
+  io/fts-common.c
   io/i-ring.c
   io/same-inode.h
   locale/programs/3level.h
