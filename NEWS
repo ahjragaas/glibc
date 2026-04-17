@@ -16,6 +16,8 @@ Major new features:
 * The SVID handling for cosh and sinh were moved to compat symbols, allowing
   improvements in performance.
 
+* New locale added: hrx_BR (Hunsrik language spoken in Brazil).
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Although malloc and related functions currently return pointers
