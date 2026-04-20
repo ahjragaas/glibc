@@ -9,6 +9,9 @@ sysdep_routines += \
   strcat \
   strcat-generic \
   strcat-vector \
+  strcpy \
+  strcpy-generic \
+  strcpy-vector \
   # sysdep_routines
 
 CFLAGS-memcpy_noalignment.c += -mno-strict-align
