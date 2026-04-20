@@ -698,6 +698,7 @@ $(objpfx)pldd: $(objpfx)xmalloc.o
 tests += \
   tst-rseq-tls-range \
   tst-rseq-tls-range-4096 \
+  tst-thp-align \
 # tests
 tests-static += \
   tst-rseq-tls-range-4096-static \
@@ -705,17 +706,21 @@ tests-static += \
 # tests-static
 modules-names += \
   tst-rseq-tls-range-mod \
+  tst-thp-size-mod \
 # modules-names
 CFLAGS-tst-rseq-tls-range.c += -DMAIN_TLS_ALIGN=4
 CFLAGS-tst-rseq-tls-range-4096.c += -DMAIN_TLS_ALIGN=4096
 CFLAGS-tst-rseq-tls-range-static.c += -DMAIN_TLS_ALIGN=4
 CFLAGS-tst-rseq-tls-range-4096-static.c += -DMAIN_TLS_ALIGN=4096
+LDFLAGS-tst-thp-size-mod.so += -Wl,-z,noseparate-code
 $(objpfx)tst-rseq-tls-range.out: $(objpfx)tst-rseq-tls-range-mod.so
 $(objpfx)tst-rseq-tls-range-4096.out: $(objpfx)tst-rseq-tls-range-mod.so
 $(objpfx)tst-rseq-tls-range-static.out: $(objpfx)tst-rseq-tls-range-mod.so
 $(objpfx)tst-rseq-tls-range-4096-static.out: $(objpfx)tst-rseq-tls-range-mod.so
+$(objpfx)tst-thp-align.out: $(objpfx)tst-thp-size-mod.so
 tst-rseq-tls-range-static-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx)
 tst-rseq-tls-range-4096-static-ENV = LD_LIBRARY_PATH=$(objpfx):$(common-objpfx)
+tst-thp-align-ENV = GLIBC_TUNABLES=glibc.elf.thp=1
 
 test-internal-extras += tst-nolink-libc
 ifeq ($(run-built-tests),yes)
