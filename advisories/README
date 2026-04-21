@@ -25,6 +25,10 @@ This is the CVE-Id assigned under the CVE Program
 Public-Date:
 The date this issue became publicly known.
 
+Rejected-Date:
+The most recent date the assigned advisory was rejected. If the advisory
+is ever published again the Rejected-Date tag should be removed.
+
 Vulnerable-Commit:
 The commit that introduced this vulnerability.  There could be multiple
 entries, one for each release branch in the glibc repository; the
@@ -66,6 +70,17 @@ An advisory for a CVE needs to be added on the master branch in two steps:
    (replace YYYY-NNNN with the actual advisory number).
 
 4. Verify the updated advisory and push the result.
+
+Rejecting an Advisory
+---------------------
+
+Rejecting an advisory on the master branch can be done in one step:
+
+1. Mark the advisory as rejected. Add the text "REJECTED: " as a prefix
+   to any short-form description. Add a new paragraph that starts with
+   "REJECTED: " and explains the reason for the rejection including
+   justification for why it no longer has security impact.  Lastly add
+   a Rejected-Date tag to the advisory.
 
 Getting a NEWS snippet from advisories
 --------------------------------------
