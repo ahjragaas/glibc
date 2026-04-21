@@ -1,5 +1,5 @@
-/* Symbol redirection for loader/static initialization code.
-   Copyright (C) 2025-2026 Free Software Foundation, Inc.
+/* Re-include the RISC-V RVV based memcpy implementation.
+   Copyright (C) 2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,9 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef _DL_IFUNC_GENERIC_H
-#define _DL_IFUNC_GENERIC_H
-
-#ifndef SHARED
-asm ("memcpy = __memcpy_generic");
-asm ("memset = __memset_generic");
-asm ("memcpy = __memcpy_generic");
-#endif
-
+#if IS_IN(libc)
+# define MEMCPY __memcpy_vector
+# undef libc_hidden_builtin_def
+# define libc_hidden_builtin_def(name)
+# include <sysdeps/riscv/rvv/memcpy.S>
 #endif

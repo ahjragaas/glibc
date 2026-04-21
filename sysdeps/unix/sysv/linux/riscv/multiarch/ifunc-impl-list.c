@@ -44,6 +44,8 @@ __libc_ifunc_impl_list (const char *name, struct libc_ifunc_impl *array,
   }
 
   IFUNC_IMPL (i, name, memcpy,
+	      IFUNC_IMPL_ADD (array, i, memcpy, rvv_enabled,
+			      __memcpy_vector)
 	      IFUNC_IMPL_ADD (array, i, memcpy, fast_unaligned,
 			      __memcpy_noalignment)
 	      IFUNC_IMPL_ADD (array, i, memcpy, 1, __memcpy_generic))

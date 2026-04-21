@@ -2,6 +2,7 @@ ifeq ($(subdir),string)
 sysdep_routines += \
   memcpy \
   memcpy-generic \
+  memcpy-vector \
   memcpy_noalignment \
   memset \
   memset-generic \
