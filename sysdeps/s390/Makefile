@@ -47,10 +47,6 @@ $(modpfx)gconv-modules-s390.conf: ../sysdeps/s390/gconv-modules-s390.conf \
 endif
 
 ifeq ($(subdir),elf)
-CFLAGS-rtld.c += -Wno-uninitialized -Wno-unused
-CFLAGS-dl-load.c += -Wno-unused
-CFLAGS-dl-reloc.c += -Wno-unused
-
 $(objpfx)tst-glibc-hwcaps: \
   $(objpfx)libmarkermod2-1.so \
   $(objpfx)libmarkermod3-1.so \
