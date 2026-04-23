@@ -43,13 +43,6 @@ do_test (void)
   struct support_blob_repeat repeat
     = support_blob_repeat_allocate ("a", 1, path_len);
   char *path = repeat.start;
-  if (path == NULL)
-    {
-      printf ("Repeated allocation (%zu bytes): %m\n", path_len);
-      /* On systems with little physical memory the test will
-	 fail and should be unsupported.  */
-      return EXIT_UNSUPPORTED;
-    }
 
   TEST_VERIFY_EXIT (symlink (".", lnk) == 0);
 
