@@ -62,9 +62,10 @@ following the bug-reporting instructions below.  Please be sure to check
 the manual in the current development sources to see if your problem has
 already been corrected.
 
-Please see https://www.gnu.org/software/libc/bugs.html for bug reporting
-information.  We are now using the Bugzilla system to track all bug reports.
-This web page gives detailed information on how to report bugs properly.
+Please see https://sourceware.org/glibc/wiki/Bugzilla%20Procedures for bug
+reporting information.  We are now using the Bugzilla system to track all
+bug reports.  This web page gives detailed information on how to report
+bugs properly.
 
 The GNU C Library is free software.  See the file COPYING.LIB for copying
 conditions, and LICENSES for notices about a few contributions that require
