@@ -66,7 +66,7 @@ __register_printf_modifier (const wchar_t *str)
 
   if (__printf_modifier_table == NULL)
     {
-      __printf_modifier_table = calloc (UCHAR_MAX,
+      __printf_modifier_table = calloc (UCHAR_MAX + 1,
 					sizeof (*__printf_modifier_table));
       if (__printf_modifier_table == NULL)
 	goto out;
