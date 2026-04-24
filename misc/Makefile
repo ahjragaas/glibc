@@ -245,6 +245,7 @@ tests := \
   tst-empty \
   tst-error1 \
   tst-fdset \
+  tst-getusershell \
   tst-hsearch \
   tst-insremque \
   tst-ioctl \
