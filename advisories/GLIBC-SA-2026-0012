@@ -7,8 +7,8 @@ TKEY or TSIG records, which may allow an attacker to craft a DNS
 response, causing a target application to crash or read uninitialized
 memory.
 
-These functions are for debugging only and hence not in the default path
-of code executed by the DNS resolver.  Further, they have been
+These functions are for application debugging only and hence not in the
+path of code executed by the DNS resolver.  Further, they have been
 deprecated since version 2.34 and should not be used by any new
 applications.  Applications should consider porting away from these
 interfaces since they may be removed in future versions.
