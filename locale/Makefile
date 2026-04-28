@@ -47,6 +47,7 @@ tests = \
   tst-C-locale \
   tst-duplocale \
   tst-locname \
+  tst-newlocale \
   # tests
 tests-container = \
   tst-localedef-path-norm \
@@ -133,6 +134,16 @@ GPERFFLAGS = -acCgopt -k1,2,5,9,$$ -L ANSI-C
 
 ifeq ($(run-built-tests),yes)
 tests-special += $(objpfx)tst-locale-locpath.out
+ifeq ($(build-shared),yes)
+ifneq ($(PERL),no)
+generated += \
+  tst-newlocale.mtrace \
+  # generated
+tests-special += \
+  $(objpfx)tst-newlocale-mem.out \
+  # tests-special
+endif # $(PERL) == yes
+endif # $(build-shared) == yes
 endif
 
 include ../Rules
@@ -185,3 +196,10 @@ $(objpfx)tst-locale-locpath.out : tst-locale-locpath.sh $(objpfx)locale
 	$(evaluate-test)
 
 $(objpfx)tst-localedef-path-norm: $(shared-thread-library)
+
+LDLIBS-tst-newlocale = $(shared-thread-library)
+tst-newlocale-ENV = MALLOC_TRACE=$(objpfx)tst-newlocale.mtrace \
+		 LD_PRELOAD=$(common-objpfx)/malloc/libc_malloc_debug.so
+$(objpfx)tst-newlocale-mem.out: $(objpfx)tst-newlocale.out
+	$(common-objpfx)malloc/mtrace $(objpfx)tst-newlocale.mtrace > $@; \
+	$(evaluate-test)

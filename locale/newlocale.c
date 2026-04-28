@@ -22,6 +22,7 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #include "localeinfo.h"
 
@@ -38,18 +39,20 @@ __libc_rwlock_define (extern , __libc_setlocale_lock attribute_hidden)
   } while (0)
 
 
-locale_t
-__newlocale (int category_mask, const char *locale, locale_t base)
+static locale_t
+__newlocale_1 (int category_mask, const char *locale, locale_t base,
+               char ** const locale_path_ptr)
 {
   /* Intermediate memory for result.  */
   const char *newnames[__LC_LAST];
   struct __locale_struct result;
   locale_t result_ptr;
-  char *locale_path;
   size_t locale_path_len;
   const char *locpath_var;
   int cnt;
   size_t names_len;
+
+  *locale_path_ptr = NULL;
 
   /* We treat LC_ALL in the same way as if all bits were set.  */
   if (category_mask == 1 << LC_ALL)
@@ -98,19 +101,20 @@ __newlocale (int category_mask, const char *locale, locale_t base)
      `LOCPATH' must only be used when the binary has no SUID or SGID
      bit set.  If using the default path, we tell _nl_find_locale
      by passing null and it can check the canonical locale archive.  */
-  locale_path = NULL;
   locale_path_len = 0;
 
   locpath_var = getenv ("LOCPATH");
   if (locpath_var != NULL && locpath_var[0] != '\0')
     {
       if (__argz_create_sep (locpath_var, ':',
-			     &locale_path, &locale_path_len) != 0)
+			     locale_path_ptr, &locale_path_len) != 0)
 	return NULL;
 
-      if (__argz_add_sep (&locale_path, &locale_path_len,
+      if (__argz_add_sep (locale_path_ptr, &locale_path_len,
 			  _nl_default_locale_path, ':') != 0)
 	return NULL;
+
+      assert (*locale_path_ptr != NULL);
     }
 
   /* Get the names for the locales we are interested in.  We either
@@ -166,7 +170,7 @@ __newlocale (int category_mask, const char *locale, locale_t base)
     {
       if ((category_mask & 1 << cnt) != 0)
 	{
-	  result.__locales[cnt] = _nl_find_locale (locale_path,
+	  result.__locales[cnt] = _nl_find_locale (*locale_path_ptr,
 						   locale_path_len,
 						   cnt, &newnames[cnt]);
 	  if (result.__locales[cnt] == NULL)
@@ -275,4 +279,18 @@ __newlocale (int category_mask, const char *locale, locale_t base)
 
   return result_ptr;
 }
+
+locale_t
+__newlocale (int category_mask, const char *locale, locale_t base)
+{
+  char *tmp_buffer = NULL;
+
+  const locale_t result = __newlocale_1 (category_mask, locale,
+                                         base, &tmp_buffer);
+
+  free (tmp_buffer);
+
+  return result;
+}
+
 weak_alias (__newlocale, newlocale)
