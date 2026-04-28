@@ -162,9 +162,13 @@ Instead the old function names now reference the new functions, e.g., a
 call to @code{fseeko} now indeed calls @code{fseeko64}.
 
 If the macro is not defined it currently defaults to @code{32}, but
-this default is planned to change due to a need to update
-@code{time_t} for Y2038 safety, and applications should not rely on
-the default.
+this default is planned to change in the future.  This is because
+@code{_TIME_BITS=64} (required for @code{time_t} Y2038 safety) can
+only be used together with @code{_FILE_OFFSET_BITS=64}.  When systems
+migrate to 64-bit @code{time_t} by default, @code{_FILE_OFFSET_BITS}
+will also need to default to @code{64}, even for applications that
+do not handle large files.  Applications should not rely on the
+current default.
 
 This macro should only be selected if the system provides mechanisms for
 handling large files.  On @w{64 bit} systems this macro has no effect
