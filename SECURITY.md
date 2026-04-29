@@ -170,7 +170,7 @@ the bug, the fix, or the mailing list discussions.
 ## CVE assignment
 
 Security bugs flagged with `security+` should have [CVE
-identifiers](http://cve.mitre.org/about/). Please reach out to the glibc
+identifiers](https://www.cve.org/About/Overview). Please reach out to the glibc
 security team using the documented [security
 process](https://sourceware.org/glibc/security.html) and they work on getting a
 CVE number.
