@@ -61,10 +61,10 @@ __get_thp_mode (void)
 
   char str[sizeof(mode_always)];
   ssize_t s = __read_nocancel (fd, str, sizeof (str));
+  __close_nocancel (fd);
   if (s >= sizeof str || s < 0)
     return thp_mode_not_supported;
   str[s] = '\0';
-  __close_nocancel (fd);
 
   if (s == sizeof (mode_always) - 1)
     {
