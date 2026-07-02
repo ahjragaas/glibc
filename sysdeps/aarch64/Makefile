@@ -51,13 +51,17 @@ tests-internal += \
   # tests-internal
 
 tests += \
+  tst-malloc-ifunc-resolver \
   tst-vpcs \
   # tests
 modules-names += \
+  tst-malloc-ifunc-resolver-mod \
   tst-vpcs-mod \
   # modules-names
 LDFLAGS-tst-vpcs-mod.so = -Wl,-z,lazy
 $(objpfx)tst-vpcs: $(objpfx)tst-vpcs-mod.so
+$(objpfx)tst-malloc-ifunc-resolver.out: \
+  $(objpfx)tst-malloc-ifunc-resolver-mod.so
 endif
 
 ifeq ($(subdir),csu)

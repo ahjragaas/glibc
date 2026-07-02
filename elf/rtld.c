@@ -357,6 +357,7 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_fpu_control = _FPU_DEFAULT,
     ._dl_pagesize = EXEC_PAGESIZE,
     ._dl_inhibit_cache = 0,
+    ._dl_rtld_map = &_dl_rtld_map,
 
     /* Function pointers.  */
     ._dl_debug_printf = _dl_debug_printf,

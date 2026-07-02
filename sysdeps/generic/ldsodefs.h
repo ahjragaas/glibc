@@ -642,6 +642,9 @@ struct rtld_global_ro
   EXTERN enum dso_sort_algorithm _dl_dso_sort_algo;
 
 #ifdef SHARED
+  /* Link map of the dynamic linker itself.  */
+  struct link_map *_dl_rtld_map;
+
   /* We add a function table to _rtld_global which is then used to
      call the function instead of going through the PLT.  The result
      is that we can avoid exporting the functions and we do not jump

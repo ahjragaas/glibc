@@ -22,8 +22,47 @@
 #include <malloc-api.h>
 #include <shlib-compat.h>
 
+#ifdef SHARED
+static inline bool
+addr_in_map (uintptr_t addr, const struct link_map *map)
+{
+  return map != NULL && addr >= map->l_map_start && addr < map->l_map_end;
+}
+
+/* Return true if the code address RET is a legitimate caller of a malloc
+   ifunc resolver: the dynamic loader or any libc.so (including dlmopen).  */
+static bool
+called_from_glibc (uintptr_t ret)
+{
+  if (addr_in_map (ret, GLRO(dl_rtld_map)))
+    return true;
+  for (size_t ns = 0; ns < GL(dl_nns); ++ns)
+    if (addr_in_map (ret, GL(dl_ns)[ns].libc_map))
+      return true;
+  return false;
+}
+#endif
+
+/* The malloc ifunc resolver is only meant to be executed from within glibc
+   (see called_from_glibc).  Some tools, notably gdb evaluating 'call malloc'
+   command invoke ifunc resolvers directly from an out-of-context dummy
+   frame.  */
+static __typeof (__libc_malloc) *
+malloc_ifunc_resolve (uintptr_t ret)
+{
+#ifdef SHARED
+  struct link_map *rtld_map = GLRO(dl_rtld_map);
+  if (rtld_map != NULL && rtld_map->l_map_end != 0
+      && !called_from_glibc (ret))
+    _dl_fatal_printf ("\
+Fatal glibc error: malloc ifunc resolver called outside the dynamic loader\n");
+#endif
+  return __libc_malloc;
+}
+
 libc_ifunc_hidden (__libc_malloc, __libc_malloc_redirect,
-		   __libc_malloc)
+		   malloc_ifunc_resolve
+		     ((uintptr_t) __builtin_return_address (0)))
 strong_alias (__libc_malloc_redirect, malloc)
 
 libc_ifunc_hidden (__libc_calloc, __libc_calloc_redirect,
