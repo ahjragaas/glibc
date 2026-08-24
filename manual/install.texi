@@ -309,6 +309,29 @@ Currently this is only supported on x86_64 and aarch64.  The option
 enables SFrame support on @code{backtrace}.
 
 Default is to disable SFrame support.
+
+@item --enable-aarch64-memtag-abi
+Enable initial support for the AArch64 Memory Tagging Extension (MTE) ABI.
+The option implements stack tagging (@code{DT_AARCH64_MEMTAG_STACK}) and MTE
+execution mode configuration (@code{DT_AARCH64_MEMTAG_MODE}) as defined in
+the Memtag ABI Extension for ELF64.
+
+The MTE stack protection is enabled if and only if the main executable is
+marked with @code{DT_AARCH64_MEMTAG_STACK}.  If the main executable is not
+marked and any dependency requires MTE stack protection, the program fails
+at startup.  The program also fails at startup if any object carries an
+unsupported marking (@code{DT_AARCH64_MEMTAG_HEAP} or
+@code{DT_AARCH64_MEMTAG_GLOBALS}), or an invalid or inconsistent set of
+@code{DT_AARCH64_MEMTAG_xxx} dynamic tags.
+
+If the execution mode is not specified with @code{DT_AARCH64_MEMTAG_MODE},
+the asynchronous mode is used.
+
+If the main executable does not enable the MTE stack protection at startup,
+any subsequent attempt to @code{dlopen} a shared object that requires it
+will be rejected.
+
+This option is disabled by default and only supported on aarch64.
 @end table
 
 To build the library and related programs, type @code{make}.  This will

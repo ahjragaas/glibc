@@ -65,6 +65,11 @@ ENTRY (_start)
 	svc	0x0
 	cbnz	w0, L(failed_gcs_lock)
 L(skip_gcs_enable):
+	/* Enable MTE if required by the Memtag ABI ELF marking.  */
+	bl	_dl_mte_init
+	/* Reload GL, x16 might be clobbered by the call above.  */
+	adrp	x16, _rtld_local
+	add	x16, x16, :lo12:_rtld_local
 
 .globl _dl_start_user
 .type _dl_start_user, %function

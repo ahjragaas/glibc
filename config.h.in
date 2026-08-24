@@ -182,6 +182,9 @@
 /* Define if inlined system calls are available.  */
 #undef HAVE_INLINED_SYSCALLS
 
+/* Define if AArch64 Memtag ABI extension should be enabled.  */
+#undef USE_AARCH64_MEMTAG_ABI
+
 /* Package description.  */
 #undef PKGVERSION
 

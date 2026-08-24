@@ -19,6 +19,10 @@ tests-static += \
   # tests-static
 tst-cpu-tunable-static-pie-TUNABLES = glibc.cpu.hwcaps=-midr,-sve,-mops
 endif
+
+sysdep-dl-routines += \
+  dl-mte-stack \
+  # sysdep-dl-routines
 endif
 
 ifeq ($(subdir),misc)
@@ -374,6 +378,108 @@ tst-gcs-audit-optional-ARGS = -- $(host-test-program-cmd)
 tst-gcs-audit-override-ARGS = -- $(host-test-program-cmd)
 
 endif # ifeq ($(have-test-gcs),yes)
+
+ifeq ($(aarch64-memtag-abi)$(have-test-memtag-stack),yesyes)
+tests += \
+  tst-memtag-abort-dep \
+  tst-memtag-stack-async \
+  tst-memtag-stack-dep1 \
+  tst-memtag-stack-dep2 \
+  tst-memtag-stack-dlopen \
+  tst-memtag-stack-dlopen-dep \
+  tst-memtag-stack-dlopen-enabled \
+  tst-memtag-stack-sync \
+  # tests
+
+modules-names += \
+  tst-memtag-mod1 \
+  tst-memtag-mod2 \
+  tst-memtag-mod3 \
+  # modules-names
+
+# Disable the stack protector for the stack tagging tests.  Some GCC versions
+# have a bug where the stack frame untagging at the function epilogue is done
+# before the stack canary check.
+memtag-stack-cflags = -march=armv8.5-a+memtag -fsanitize=memtag-stack \
+		      $(no-stack-protector)
+
+CFLAGS-tst-memtag-stack-sync.c += $(memtag-stack-cflags)
+LDFLAGS-tst-memtag-stack-sync += -Wl,-z,memtag-stack -Wl,-z,memtag-mode=sync
+tst-memtag-stack-sync-ARGS = sync
+
+CFLAGS-tst-memtag-stack-async.c += $(memtag-stack-cflags)
+LDFLAGS-tst-memtag-stack-async += -Wl,-z,memtag-stack -Wl,-z,memtag-mode=async
+tst-memtag-stack-async-ARGS = async
+
+CFLAGS-tst-memtag-mod2.c += -march=armv8.5-a+memtag -fsanitize=memtag-stack
+LDFLAGS-tst-memtag-mod2.so += -Wl,-z,memtag-stack -Wl,-z,memtag-mode=sync
+$(objpfx)tst-memtag-mod2.so: $(libsupport)
+
+CFLAGS-tst-memtag-stack-dep1.c += $(memtag-stack-cflags)
+LDFLAGS-tst-memtag-stack-dep1 += -Wl,-z,memtag-stack -Wl,-z,memtag-mode=sync
+$(objpfx)tst-memtag-stack-dep1: $(objpfx)tst-memtag-mod1.so
+tst-memtag-stack-dep1-ARGS = sync
+
+CFLAGS-tst-memtag-stack-dep2.c += $(memtag-stack-cflags)
+LDFLAGS-tst-memtag-stack-dep2 += -Wl,-z,memtag-stack -Wl,-z,memtag-mode=sync \
+				 -Wl,--no-as-needed
+$(objpfx)tst-memtag-stack-dep2: $(objpfx)tst-memtag-mod2.so
+tst-memtag-stack-dep2-ARGS = sync
+
+$(objpfx)tst-memtag-stack-dlopen.out: $(objpfx)tst-memtag-mod2.so
+
+LDFLAGS-tst-memtag-mod3.so += -Wl,--no-as-needed
+$(objpfx)tst-memtag-mod3.so: $(objpfx)tst-memtag-mod2.so
+$(objpfx)tst-memtag-stack-dlopen-dep.out: $(objpfx)tst-memtag-mod3.so \
+  $(objpfx)tst-memtag-mod1.so
+
+CFLAGS-tst-memtag-stack-dlopen-enabled.c += $(memtag-stack-cflags)
+LDFLAGS-tst-memtag-stack-dlopen-enabled += -Wl,-z,memtag-stack \
+					   -Wl,-z,memtag-mode=sync
+$(objpfx)tst-memtag-stack-dlopen-enabled.out: $(objpfx)tst-memtag-mod2.so
+
+LDFLAGS-tst-memtag-abort-dep += -Wl,--no-as-needed
+$(objpfx)tst-memtag-abort-dep: $(objpfx)tst-memtag-mod2.so
+tst-memtag-abort-dep-ERROR = requires MTE stack protection
+
+ifeq ($(have-test-memtag-heap),yes)
+tests += \
+  tst-memtag-abort-heap \
+  # tests
+
+LDFLAGS-tst-memtag-abort-heap += -Wl,-z,memtag-heap -Wl,-z,memtag-mode=sync
+tst-memtag-abort-heap-ERROR = MTE protection heap is not supported
+endif # ifeq ($(have-test-memtag-heap),yes)
+
+ifeq ($(have-test-memtag-mode-only),yes)
+tests += \
+  tst-memtag-abort-orphan \
+  tst-memtag-dlopen-orphan \
+  # tests
+
+modules-names += \
+  tst-memtag-mod4 \
+  # modules-names
+
+LDFLAGS-tst-memtag-abort-orphan += -Wl,-z,memtag-mode=sync
+tst-memtag-abort-orphan-ERROR = inconsistent DT_AARCH64_MEMTAG_xxx dynamic tags
+
+LDFLAGS-tst-memtag-mod4.so += -Wl,-z,memtag-mode=sync
+$(objpfx)tst-memtag-dlopen-orphan.out: $(objpfx)tst-memtag-mod4.so \
+  $(objpfx)tst-memtag-mod1.so
+endif # ifeq ($(have-test-memtag-mode-only),yes)
+
+define run-memtag-abort-test
+  $(test-wrapper-env) $(run-program-env) $(host-test-program-cmd)
+endef
+
+$(objpfx)tst-memtag-abort-%.out: \
+  $(..)sysdeps/unix/sysv/linux/aarch64/tst-memtag-abort.sh \
+  $(objpfx)tst-memtag-abort-%
+	$(SHELL) $< $(common-objpfx) $(test-name) \
+	  '$(tst-memtag-abort-$*-ERROR)' '$(run-memtag-abort-test)'; \
+	$(evaluate-test)
+endif # ifeq ($(aarch64-memtag-abi)$(have-test-memtag-stack),yesyes)
 
 endif # ifeq ($(subdir),misc)
 

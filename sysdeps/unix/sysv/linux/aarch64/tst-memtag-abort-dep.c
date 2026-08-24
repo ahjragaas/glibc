@@ -1,5 +1,6 @@
-/* Data for processor runtime information.  AArch64 version.
-   Copyright (C) 2024-2026 Free Software Foundation, Inc.
+/* Check that an unmarked main executable with a dependency that requires
+   MTE stack protection aborts at startup.
+   Copyright (C) 2026 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,36 +17,16 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#ifndef PROCINFO_CLASS
-# define PROCINFO_CLASS
-#endif
+#include <support/check.h>
 
-#if !IS_IN (ldconfig)
-# if !defined PROCINFO_DECL && defined SHARED
-  ._dl_aarch64_gcs
-# else
-PROCINFO_CLASS unsigned long _dl_aarch64_gcs
-# endif
-# ifndef PROCINFO_DECL
-= 0
-# endif
-# if !defined SHARED || defined PROCINFO_DECL
-;
-# else
-,
-# endif
+void run_mte_test (void *);
 
-# if !defined PROCINFO_DECL && defined SHARED
-  ._dl_aarch64_mte
-# else
-PROCINFO_CLASS unsigned long _dl_aarch64_mte
-# endif
-# ifndef PROCINFO_DECL
-= 0
-# endif
-# if !defined SHARED || defined PROCINFO_DECL
-;
-# else
-,
-# endif
-#endif
+static int
+do_test (void)
+{
+  void (*fp) (void *) = run_mte_test;
+  FAIL_EXIT1 ("dynamic loader did not abort with a MTE marked dependency "
+	      "(%p)", fp);
+}
+
+#include <support/test-driver.c>

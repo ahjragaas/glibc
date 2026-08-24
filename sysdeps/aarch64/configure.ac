@@ -105,3 +105,54 @@ then
 else
   LIBC_CONFIG_VAR([have-test-gcs], [no])
 fi
+
+# Check if compiler supports MEMTAG stack support.  Also check if linker
+# support the required options.
+LIBC_TRY_CC_AND_TEST_CC_OPTION(
+  [if compiler supports -fsanitize=memtag-stack],
+  [-Werror -march=armv8.5-a+memtag -fsanitize=memtag-stack],
+  libc_cv_cc_memtag_stack,
+  [libc_cv_cc_memtag_stack=yes],
+  [libc_cv_cc_memtag_stack=no],
+  libc_cv_test_cc_memtag_stack,
+  [libc_cv_test_cc_memtag_stack=yes],
+  [libc_cv_test_cc_memtag_stack=no]
+)
+# lld requires the memtag-mode to be used along memtag-stack
+LIBC_LINKER_FEATURE(
+  [-z memtag-stack], [-Wl,--fatal-warnings -Wl,-z,memtag-stack -z memtag-mode=sync],
+  [libc_cv_ld_memtag_stack=yes], [libc_cv_ld_memtag_stack=no]
+)
+if test $libc_cv_test_cc_memtag_stack = yes && \
+   test $libc_cv_ld_memtag_stack = yes
+then
+   LIBC_CONFIG_VAR([have-test-memtag-stack], [yes])
+else
+   LIBC_CONFIG_VAR([have-test-memtag-stack], [no])
+fi
+
+# Check if linker supports Memtag Heap support.  lld requires the memtag-mode.
+LIBC_LINKER_FEATURE(
+  [-z memtag-heap], [-Wl,--fatal-warnings -Wl,-z,memtag-heap -z memtag-mode=sync],
+  [libc_cv_ld_memtag_heap=yes], [libc_cv_ld_memtag_heap=no]
+)
+if test $libc_cv_ld_memtag_heap = yes
+then
+   LIBC_CONFIG_VAR([have-test-memtag-heap], [yes])
+else
+   LIBC_CONFIG_VAR([have-test-memtag-heap], [no])
+fi
+
+# Check if the linker accepts -z memtag-mode without any MTE feature option.
+# BFD ld emits an orphan DT_AARCH64_MEMTAG_MODE dynamic tag in this case,
+# which is used to check the inconsistent marking handling.
+LIBC_LINKER_FEATURE(
+  [-z memtag-mode], [-Wl,--fatal-warnings -Wl,-z,memtag-mode=sync],
+  [libc_cv_ld_memtag_mode_only=yes], [libc_cv_ld_memtag_mode_only=no]
+)
+if test $libc_cv_ld_memtag_mode_only = yes
+then
+   LIBC_CONFIG_VAR([have-test-memtag-mode-only], [yes])
+else
+   LIBC_CONFIG_VAR([have-test-memtag-mode-only], [no])
+fi

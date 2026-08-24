@@ -90,6 +90,11 @@ Major new features:
 
 * A new locale has been added: hrx_BR (Hunsrik language spoken in Brazil).
 
+* AArch64 now has initial support for the Memtag ABI Extension for ELF64,
+  specifically handling stack tagging (DT_AARCH64_MEMTAG_STACK) and execution
+  mode configuration (DT_AARCH64_MEMTAG_MODE).  It can be enabled with the
+  new --enable-aarch64-memtag-abi configure option.
+
 Deprecated and removed features, and other changes affecting compatibility:
 
 * Although malloc and related functions currently return pointers

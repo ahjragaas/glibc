@@ -59,6 +59,13 @@ enum {
   BTI_CHECK_ENFORCED = 1,
 };
 
+enum {
+  MTE_MODE_SYNC  = 0x1,
+  MTE_MODE_ASYNC = 0x2,
+  MTE_MODE_MASK  = MTE_MODE_SYNC | MTE_MODE_ASYNC,
+  MTE_STACK      = 0x4,
+};
+
 struct cpu_features
 {
   uint64_t midr_el1;
