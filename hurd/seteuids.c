@@ -39,7 +39,7 @@ retry:
     {
       /* Get a new auth port using those IDs.  */
       err = __USEPORT (AUTH,
-		       __auth_makeauth (port, NULL, 0, 0,
+		       __auth_makeauth (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 					new, n,
 					_hurd_id.aux.uids, _hurd_id.aux.nuids,
 					_hurd_id.gen.gids, _hurd_id.gen.ngids,
