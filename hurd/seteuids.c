@@ -15,6 +15,7 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
+#include <unistd.h>
 #include <hurd.h>
 #include <hurd/id.h>
 
@@ -24,12 +25,20 @@ seteuids (size_t n, const uid_t *uids)
 {
   error_t err;
   auth_t newauth;
-  size_t i;
-  gid_t new[n];
+  size_t i, start;
+  uid_t euid;
+  uid_t new[n + 1];
 
+  start = 0;
+  euid = geteuid ();
+  if (euid != (uid_t) -1 && (n == 0 || (n > 0 && euid != uids[0])))
+    {
+      new[0] = euid;
+      start = 1;
+    }
   /* Fault before taking locks.  */
   for (i = 0; i < n; ++i)
-    new[i] = uids[i];
+    new[i + start] = uids[i];
 
 retry:
   HURD_CRITICAL_BEGIN;
@@ -40,7 +49,7 @@ retry:
       /* Get a new auth port using those IDs.  */
       err = __USEPORT (AUTH,
 		       __auth_makeauth (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
-					new, n,
+					new, n + start,
 					_hurd_id.aux.uids, _hurd_id.aux.nuids,
 					_hurd_id.gen.gids, _hurd_id.gen.ngids,
 					_hurd_id.aux.gids, _hurd_id.aux.ngids,

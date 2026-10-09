@@ -17,6 +17,7 @@
 
 #include <errno.h>
 #include <sys/types.h>
+#include <unistd.h>
 #include <grp.h>
 #include <hurd.h>
 #include <hurd/id.h>
@@ -27,12 +28,20 @@ setgroups (size_t n, const gid_t *groups)
 {
   error_t err;
   auth_t newauth;
-  size_t i;
-  gid_t new[n];
+  size_t i, start;
+  gid_t egid;
+  gid_t new[n + 1];
 
+  start = 0;
+  egid = getegid ();
+  if (egid != (gid_t) -1 && (n == 0 || (n > 0 && egid != groups[0])))
+    {
+      new[0] = egid;
+      start = 1;
+    }
   /* Fault before taking locks.  */
   for (i = 0; i < n; ++i)
-    new[i] = groups[i];
+    new[i + start] = groups[i];
 
 retry:
   HURD_CRITICAL_BEGIN;
@@ -45,7 +54,7 @@ retry:
 		       __auth_makeauth (port, NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 					_hurd_id.gen.uids, _hurd_id.gen.nuids,
 					_hurd_id.aux.uids, _hurd_id.aux.nuids,
-					new, n,
+					new, n + start,
 					_hurd_id.aux.gids, _hurd_id.aux.ngids,
 					&newauth));
     }
