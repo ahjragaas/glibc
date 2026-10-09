@@ -20,11 +20,11 @@
 
 /* Set the uid set for the current user to UIDS (N of them).  */
 int
-seteuids (int n, const uid_t *uids)
+seteuids (size_t n, const uid_t *uids)
 {
   error_t err;
   auth_t newauth;
-  int i;
+  size_t i;
   gid_t new[n];
 
   /* Fault before taking locks.  */

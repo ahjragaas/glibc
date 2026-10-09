@@ -177,7 +177,7 @@ extern int _hurd_change_directory_port_from_fd (struct hurd_port *portcell,
 
 /* Get and set the effective UID set.  */
 extern int geteuids (int __n, uid_t *__uidset);
-extern int seteuids (int __n, const uid_t *__uidset);
+extern int seteuids (size_t __n, const uid_t *__uidset);
 
 
 /* Split FILE into a directory and a name within the directory.  The
