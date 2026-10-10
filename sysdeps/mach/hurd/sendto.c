@@ -85,7 +85,7 @@ __sendto (int fd,
 			      /* Send the data.  */
 			      int cancel_oldtype = LIBC_CANCEL_ASYNC();
 			      err = __socket_send (port, aport,
-						   flags, buf, n,
+						   flags & ~MSG_NOSIGNAL, buf, n,
 						   NULL,
 						   MACH_MSG_TYPE_COPY_SEND, 0,
 						   NULL, 0, &wrote);

@@ -32,7 +32,7 @@ __send (int fd, const void *buf, size_t n, int flags)
 
   cancel_oldtype = LIBC_CANCEL_ASYNC();
   err = HURD_DPORT_USE_CANCEL (fd, __socket_send (port, MACH_PORT_NULL,
-						  flags, buf, n,
+						  flags & ~MSG_NOSIGNAL, buf, n,
 						  NULL, MACH_MSG_TYPE_COPY_SEND, 0,
 						  NULL, 0, &wrote));
   LIBC_CANCEL_RESET (cancel_oldtype);

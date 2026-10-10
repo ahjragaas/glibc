@@ -184,7 +184,7 @@ __libc_sendmsg (int fd, const struct msghdr *message, int flags)
 			      /* Send the data.  */
 			      int cancel_oldtype = LIBC_CANCEL_ASYNC();
 			      err = __socket_send (port, aport,
-						   flags, data.ptr, len,
+						   flags & ~MSG_NOSIGNAL, data.ptr, len,
 						   ports,
 						   MACH_MSG_TYPE_COPY_SEND,
 						   nports,

@@ -87,7 +87,7 @@ __libc_recvmsg (int fd, struct msghdr *message, int flags)
   buf = data;
   cancel_oldtype = LIBC_CANCEL_ASYNC();
   err = HURD_DPORT_USE_CANCEL (fd, __socket_recv (port, &aport,
-						  flags, &data, &len,
+						  flags & ~MSG_NOSIGNAL, &data, &len,
 						  &ports, &nports,
 						  &cdata, &clen,
 						  &message->msg_flags, amount));
