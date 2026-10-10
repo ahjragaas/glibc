@@ -30,7 +30,7 @@ seteuids (size_t n, const uid_t *uids)
   uid_t new[n + 1];
 
   start = 0;
-  euid = geteuid ();
+  euid = __geteuid ();
   if (euid != (uid_t) -1 && (n == 0 || (n > 0 && euid != uids[0])))
     {
       new[0] = euid;

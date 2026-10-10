@@ -33,7 +33,7 @@ setgroups (size_t n, const gid_t *groups)
   gid_t new[n + 1];
 
   start = 0;
-  egid = getegid ();
+  egid = __getegid ();
   if (egid != (gid_t) -1 && (n == 0 || (n > 0 && egid != groups[0])))
     {
       new[0] = egid;
